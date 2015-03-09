@@ -53,3 +53,16 @@ end
 xn = X(1,:);
 yn = X(3,:);
 plot2d(xn, yn)
+
+
+// Ecriture dans fichier
+fileid='Petanque.txt'
+fp=mopen(pwd()+'\'+fileid,'w');
+Kt=X';
+Ks=string(X(1));
+for k=2: length(X),
+    Ks=Ks+','+string(Kt(k));
+end
+mputstr(Ks,fp);
+mclose(fp);
+

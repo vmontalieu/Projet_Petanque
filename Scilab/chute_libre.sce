@@ -6,12 +6,12 @@ Te = 0.04 // 40ms
 
 
 // Conditions initiales
-theta = 60; // angle d'attaque. TODO:A METTRE EN RADIAN MAYBE ?
+theta = 60; // angle d'attaque. 
 pi = 3.14
 theta = pi * (theta) / 180 
 hauteur = 2; // hauteur initiale de la boule (m)
 v0 = 5; // m/s²
-// TODO: pas sur sur les cos sin.
+
 v0x = v0*cos(theta);
 v0y = v0*sin(theta);
 
@@ -20,7 +20,7 @@ v0y = v0*sin(theta);
 X0 = [0; v0x; hauteur; v0y]; // Position initiale de la boule à l'instant 0
 
 
-// Définition de A;B;C;D de l'équation, TODO:unité?KG/s?
+// Définition de A;B;C;D de l'équation, 
 A= [0,1,0,0 ; 0,0,0,0 ; 0,0,0,1 ; 0,0,0,0]; 
 B= [0,0 ; 1,0 ; 0,0 ; 0,1];
 C=  eye(4,4); // La matrice identité 4x4.

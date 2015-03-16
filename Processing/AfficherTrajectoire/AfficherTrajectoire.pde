@@ -10,7 +10,7 @@ int index = 0;
 // Taille de la fenêtre
 int window_size_x = 640;
 int window_size_y = 480;
-int hauteur_du_sol = 50; // La hauteur du sol
+int hauteur_du_sol = 70; // La hauteur du sol
 // Stockage des coordonnées du point d'avant (pour dessiner une ligne)
 float previous_x = 0;
 float previous_y = 0;
@@ -22,16 +22,26 @@ void setup() {
   size(window_size_x, window_size_y);
   background(0);
   stroke(255);
-  frameRate(12);
+  frameRate(24);
   // Stockage de la trajectoire sur une ligne
   String[] temp = loadStrings("trajectoire.txt");
   // Découpage par composantes
   lines = split(temp[0], ';');
+  
+  //Background !
+    PImage img;
+    img = loadImage("Background.jpg");
+    background(img);
+ // background(204, 255, 255);
 }
 
 void draw() {
   
-  // Dessin du sol #SWAG
+  
+  // Dessin du sol #SWAG (plus la peine avec le background)
+  /*
+  stroke(102, 51, 0);
+  strokeWeight( 5 ); //Epaisseur du trait
   line(0, window_size_y-hauteur_du_sol, window_size_x, window_size_y-hauteur_du_sol);
   line(0, window_size_y-hauteur_du_sol+1, window_size_x, window_size_y-hauteur_du_sol+1);
    line(0, window_size_y-hauteur_du_sol+2, window_size_x, window_size_y-hauteur_du_sol+2);
@@ -39,6 +49,9 @@ void draw() {
   {
      line(i, window_size_y-hauteur_du_sol, i+50, window_size_y);
   }
+  */
+  
+  /**************************/
   
   if (index < lines.length) {
     String[] pieces = split(lines[index], ',');
@@ -52,7 +65,11 @@ void draw() {
      
       if(previous_x != 0 && previous_y != 0)
       { // Dessin de la ligne
+        stroke(204, 0, 0);  // Couleur du trait
+        strokeWeight( 3 ); //Epaisseur du trait
         line(previous_x, window_size_y-previous_y-hauteur_du_sol, x, window_size_y-y-hauteur_du_sol);
+        strokeWeight(10);
+        point(x, window_size_y-y-hauteur_du_sol);
       }
       
       previous_x = x;

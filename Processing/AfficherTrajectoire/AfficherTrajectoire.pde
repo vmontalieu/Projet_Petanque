@@ -29,10 +29,9 @@ void setup() {
   lines = split(temp[0], ';');
   
   //Background !
-    PImage img;
-    img = loadImage("Background.jpg");
-    background(img);
- // background(204, 255, 255);
+  PImage img;
+  img = loadImage("Background.jpg");
+  background(img);
 }
 
 void draw() {
@@ -53,29 +52,36 @@ void draw() {
   
   /**************************/
   
+  // Récupération des coordonnées x,y
   if (index < lines.length) {
     String[] pieces = split(lines[index], ',');
     if (pieces.length == 2) {
-      float x = float(pieces[0]) *scale ;
-      float y = float(pieces[1]) *scale;
-      // Mise à l'echelle pour la fenêtre
-      // On s'arrête sur le sol !
+      float x = float(pieces[0]) *scale;
+      float y = float(pieces[1]) *scale; 
+
+
+      // Correction du y très négatif causé par le facteur scale
       if(y < 0) y = 0; 
-      print("x : %f, y : %f\n", x, y);
+      
+      // Affichage des coordonnées
+      print(x ,";", y, "\n");
      
+     // Points rouges
+     stroke(204, 0, 0);  // Couleur du trait
+     strokeWeight(10); // Epaisseur du trait
+     point(x, window_size_y-y-hauteur_du_sol);
+       
+      // Dessin de la ligne
       if(previous_x != 0 && previous_y != 0)
-      { // Dessin de la ligne
-        stroke(204, 0, 0);  // Couleur du trait
+      { 
         strokeWeight( 3 ); //Epaisseur du trait
-        line(previous_x, window_size_y-previous_y-hauteur_du_sol, x, window_size_y-y-hauteur_du_sol);
-        strokeWeight(10);
-        point(x, window_size_y-y-hauteur_du_sol);
+        line(previous_x, window_size_y-previous_y-hauteur_du_sol, x, window_size_y-y-hauteur_du_sol);     
       }
       
+      // On stocke les coordonnées dans les variables previous (pour dessiner le trait)
       previous_x = x;
       previous_y = y;
     }
-    // On stocke les vielles valeurs dans les variables previous
     
     // Go to the next line for the next run through draw()
     index = index + 1;

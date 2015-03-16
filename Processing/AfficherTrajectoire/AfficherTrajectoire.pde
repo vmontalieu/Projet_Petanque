@@ -66,16 +66,19 @@ void draw() {
       // Affichage des coordonnées
       print(x ,";", y, "\n");
      
-     // Points rouges
-     stroke(204, 0, 0);  // Couleur du trait
-     strokeWeight(10); // Epaisseur du trait
-     point(x, window_size_y-y-hauteur_du_sol);
+
        
       // Dessin de la ligne
       if(previous_x != 0 && previous_y != 0)
       { 
+        stroke(204, 0, 0);  // Couleur du trait
         strokeWeight( 3 ); //Epaisseur du trait
-        line(previous_x, window_size_y-previous_y-hauteur_du_sol, x, window_size_y-y-hauteur_du_sol);     
+        line(previous_x, window_size_y-previous_y-hauteur_du_sol, x, window_size_y-y-hauteur_du_sol); 
+    
+         // Points rouges
+
+         strokeWeight(10); // Epaisseur du trait
+         point(x, window_size_y-y-hauteur_du_sol);    
       }
       
       // On stocke les coordonnées dans les variables previous (pour dessiner le trait)

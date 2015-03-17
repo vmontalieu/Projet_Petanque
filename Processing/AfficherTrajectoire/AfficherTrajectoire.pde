@@ -1,92 +1,284 @@
 /**
- * LoadFile 1
- * 
- * Loads a text file that contains two numbers separated by a tab ('\t').
- * A new pair of numbers is loaded each frame and used to draw a point on the screen.
+* Dessin de trajectoire
  */
 
-String[] lines;
+String[] coordonnees_trajectoire;
+
+/* Etats du programme */
+
+int GAME_STATE;
+int START_MENU = 1;
+int INIT_GAME = 2;
+int INIT_LANCER = 3; // Moment où on choisit la vitesse et l'angle d'attaque
+int LANCER_BOULE = 4; // Moment où la boule est lancée
+int END_GAME = 10; // Moment où la boule est lancée
+
+
+
+// Valeur d'échelle pour mieux voir la trajectoire
+int scale = 100;
+
 int index = 0;
 // Taille de la fenêtre
 int window_size_x = 640;
 int window_size_y = 480;
-int hauteur_du_sol = 70; // La hauteur du sol
-// Stockage des coordonnées du point d'avant (pour dessiner une ligne)
-float previous_x = 0;
-float previous_y = 0;
+int hauteur_du_sol = 85; // La hauteur du sol
 
-// Valeur d'échelle pour mieux voir la trajectoire
-int scale = 150;
 
-void setup() {
+CommandeManuelle C = new CommandeManuelle();
+
+PImage img;
+
+float force = 0;
+float angle_dattaque = 0;
+
+
+void setup() 
+{
+  // Ouverture de la fenêtre
   size(window_size_x, window_size_y);
   background(0);
   stroke(255);
   frameRate(24);
-  // Stockage de la trajectoire sur une ligne
-  String[] temp = loadStrings("trajectoire.txt");
-  // Découpage par composantes
-  lines = split(temp[0], ';');
   
-  //Background !
-  PImage img;
-  img = loadImage("Background.jpg");
-  background(img);
+  index = 0;
+  force = 5;
+  angle_dattaque = 45;
+  
+  GAME_STATE = START_MENU;
 }
 
-void draw() {
+/*
+Initialiser les variables pour une nouvelle partie
+*/
+void init_game()
+{
   
   
-  // Dessin du sol #SWAG (plus la peine avec le background)
-  /*
-  stroke(102, 51, 0);
-  strokeWeight( 5 ); //Epaisseur du trait
-  line(0, window_size_y-hauteur_du_sol, window_size_x, window_size_y-hauteur_du_sol);
-  line(0, window_size_y-hauteur_du_sol+1, window_size_x, window_size_y-hauteur_du_sol+1);
-   line(0, window_size_y-hauteur_du_sol+2, window_size_x, window_size_y-hauteur_du_sol+2);
-  for(int i = -40 ; i < window_size_x ; i+=20)
+  // Chargement du background
+  img = loadImage("Background.jpg");
+  index = 0;
+  GAME_STATE = INIT_LANCER; // On enchaine sur l'init lancer
+}
+
+void draw() 
+{
+  
+  key_events(); // gestion des évènements
+
+  /****************** DESSIN ***********************/
+
+
+  // Le Menu
+  if(GAME_STATE == START_MENU) 
   {
-     line(i, window_size_y-hauteur_du_sol, i+50, window_size_y);
+
+   
+    background(224,224,224);
+    textSize(64);
+    textAlign(CENTER,CENTER);
+    text("Projet Petanque", 320, 200); 
+    fill(0, 0, 0);
+
+    textSize(32);
+    textAlign(CENTER,BOTTOM);
+    text("Press [X] to start", 320, 400); 
+    fill(0, 0, 0);
+
+
   }
-  */
+
+  else if(GAME_STATE == INIT_GAME)
+  {
+    init_game();
+  }
+  // Le départ de lancement de la boule
+  else if (GAME_STATE == INIT_LANCER)
+  {
+    background(img);
+
+    draw_texts();
+    draw_boule();
+  }
+
+  else if(GAME_STATE == LANCER_BOULE)
+  {
+    background(img);
+
+    draw_texts();
+    draw_trajectoire();
+    draw_boule();
+  
+  
+    index++;
+    
+    if(C.coordonnees_trajectoire_y[index] <= 0 ) // Si fin de la trajectoire, fin de la partie
+    {
+      print("end game! index" + index + "instant_t" + C.instant_t);
+      GAME_STATE = END_GAME;
+    }
+
+  }
+
+  else if(GAME_STATE == END_GAME) // Fin du jeu, Afficher du texte, proposer de recommencer
+  {
+    
+    textSize(30);
+    textAlign(CENTER,CENTER);
+    text("TRY AGAIN? [T]", 320, 60); 
+    fill(0, 0, 0);
+  }
+
+
+
   
   /**************************/
   
-  // Récupération des coordonnées x,y
-  if (index < lines.length) {
-    String[] pieces = split(lines[index], ',');
-    if (pieces.length == 2) {
-      float x = float(pieces[0]) *scale;
-      float y = float(pieces[1]) *scale; 
+ 
+}
 
+/*
 
-      // Correction du y très négatif causé par le facteur scale
-      if(y < 0) y = 0; 
-      
-      // Affichage des coordonnées
-      print(x ,";", y, "\n");
-     
+* Gestion des évènements clavier
 
-       
-      // Dessin de la ligne
-      if(previous_x != 0 && previous_y != 0)
-      { 
-        stroke(204, 0, 0);  // Couleur du trait
-        strokeWeight( 3 ); //Epaisseur du trait
-        line(previous_x, window_size_y-previous_y-hauteur_du_sol, x, window_size_y-y-hauteur_du_sol); 
+*/
+void key_events()
+{
+  if(GAME_STATE == START_MENU)
+  {
     
-         // Points rouges
-
-         strokeWeight(10); // Epaisseur du trait
-         point(x, window_size_y-y-hauteur_du_sol);    
-      }
-      
-      // On stocke les coordonnées dans les variables previous (pour dessiner le trait)
-      previous_x = x;
-      previous_y = y;
+    if(key == 'x')
+    {
+      GAME_STATE = INIT_GAME;
     }
-    
-    // Go to the next line for the next run through draw()
-    index = index + 1;
+      
+
+  }
+  else if(GAME_STATE == INIT_GAME)
+  {
+    // rien.
+  }
+
+  else if(GAME_STATE == INIT_LANCER)
+  {
+
+
+    if(key == 'a') // monter l'angle
+    {
+      angle_dattaque += 1;
+      if(angle_dattaque > 80) angle_dattaque = 80; // Limite
+      // Faire tout les 
+    }
+    else if(key == 'z') // baisser l'angle
+    {
+      angle_dattaque -= 1;
+      if(angle_dattaque < -80) angle_dattaque = -80; // Limite
+    }
+    else if(key == 'q') // Baisser force
+    {
+      force -= 0.1;
+      if(force > 10) force = 10; // Limite
+    }
+    else if(key == 's') // Monter force
+    {
+      force += 0.1;
+      if(force > 90) force = 1; // Limite
+    }
+
+    if(key == ' ') // Lancer la boule
+    {
+      C = new CommandeManuelle();
+      C.set_conditions_initiales(force, angle_dattaque);
+      C.compute_trajectoire();
+      GAME_STATE = LANCER_BOULE;
+      
+    }
+      
+  }
+
+  else if(GAME_STATE == END_GAME)
+  {
+
+    if(key == 't') // Retour au menu principal
+    {
+      GAME_STATE = INIT_GAME;
+    }
+
+  }
+
+  key = 0; // Nettoyage de l'entrée sur key
+}
+
+
+
+/**********************************    Autres sous-fonctions ***********************************/
+
+
+
+void draw_trajectoire()
+{
+
+  if(C.coordonnees_trajectoire_y[index] <= 0) C.coordonnees_trajectoire_y[index] = 0; // on arrondit le y.
+  for(int i = 0 ; i < index ; i++)
+  {
+    // Dessin de la ligne
+      
+      stroke(204, 0, 0);  // Couleur du trait
+      strokeWeight( 3 ); //Epaisseur du trait
+      line(C.coordonnees_trajectoire_x[i]*scale,
+            window_size_y-C.coordonnees_trajectoire_y[i]*scale-hauteur_du_sol,
+           C.coordonnees_trajectoire_x[i+1]*scale,
+             window_size_y-C.coordonnees_trajectoire_y[i+1]*scale-hauteur_du_sol); 
+  
+       // Points rouges
+       strokeWeight(10); // Epaisseur du trait
+       point(C.coordonnees_trajectoire_x[i+1]*scale, window_size_y-C.coordonnees_trajectoire_y[i+1]*scale-hauteur_du_sol); 
+
+
   }
 }
+
+/*
+Dessine la boule
+*/
+void draw_boule()
+{
+  stroke(64, 64, 64);  // Couleur du trait
+  strokeWeight(10);
+
+  if(GAME_STATE == INIT_LANCER)
+    ellipse(0*scale, window_size_y-hauteur_initiale*scale-hauteur_du_sol-5, 10, 10); 
+
+  else
+    ellipse(C.coordonnees_trajectoire_x[index+1]*scale, window_size_y-C.coordonnees_trajectoire_y[index+1]*scale-hauteur_du_sol-5, 10, 10); 
+
+}
+
+/*
+Draw the texts
+*/
+void draw_texts()
+{
+  if(GAME_STATE == LANCER_BOULE || GAME_STATE == END_GAME || GAME_STATE == INIT_LANCER)
+  {
+    textSize(15);
+    textAlign(CENTER,CENTER);
+    text("X:" + C.coordonnees_trajectoire_x[index] + "          Y:" + C.coordonnees_trajectoire_y[index], 320, 20); 
+    fill(0, 0, 0);
+
+    textSize(15);
+    textAlign(CENTER,CENTER);
+    text("Force: " + force + "\nAngle: " + angle_dattaque, 500, 20); 
+    fill(0, 0, 0);
+
+  }
+
+  else
+  {
+    textSize(15);
+    textAlign(CENTER,CENTER);
+    text("ERROR draw_texts()", 320, 20); 
+    fill(0, 0, 0);
+  }
+}
+

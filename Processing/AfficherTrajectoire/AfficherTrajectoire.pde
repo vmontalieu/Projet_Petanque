@@ -177,12 +177,12 @@ void key_events()
     else if(key == 'q') // Baisser force
     {
       force -= 0.1;
-      if(force > 10) force = 10; // Limite
+      if(force < 1) force = 1; // Limite
     }
     else if(key == 's') // Monter force
     {
       force += 0.1;
-      if(force > 90) force = 1; // Limite
+      if(force > 10) force = 10; // Limite
     }
 
     if(key == ' ') // Lancer la boule
@@ -263,13 +263,21 @@ void draw_texts()
   {
     textSize(15);
     textAlign(CENTER,CENTER);
-    text("X:" + C.coordonnees_trajectoire_x[index] + "          Y:" + C.coordonnees_trajectoire_y[index], 320, 20); 
     fill(0, 0, 0);
+    text("X:" + C.coordonnees_trajectoire_x[index] + "          Y:" + C.coordonnees_trajectoire_y[index], 320, 20); 
+    
 
     textSize(15);
     textAlign(CENTER,CENTER);
-    text("Force: " + force + "\nAngle: " + angle_dattaque, 500, 20); 
     fill(0, 0, 0);
+    text("Force: " + force + "\nAngle: " + angle_dattaque, 500, 20); 
+    
+
+    textSize(15);
+    fill(255, 255, 255);
+    textAlign(CENTER,CENTER);
+    text("Controle de la force: Q-S " + "\nControle de l'angle: A-Z", 100, 450); 
+    
 
   }
 

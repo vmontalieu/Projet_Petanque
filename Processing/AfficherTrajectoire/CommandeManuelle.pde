@@ -1,6 +1,5 @@
 
-// La hauteur initiale du lancer
-float hauteur_initiale = 1.0;
+
 
 /*
 Gestion de la commande manuelle
@@ -114,7 +113,7 @@ class CommandeManuelle
     // Vecteur de conditions initiales
     X0[0][0] = 0;
     X0[1][0] = v0x;
-    X0[2][0] = hauteur_initiale;
+    X0[2][0] = HAUTEUR_INITIALE;
     X0[3][0] = v0y;
   }
 

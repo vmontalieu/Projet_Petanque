@@ -18,7 +18,8 @@ void setup()
 
 void draw() {
 
-  // Le Menu
+  // Dessin de la fenêtre
+  
   if (GAME_STATE == START_MENU) 
   {
     draw_menu();
@@ -27,26 +28,26 @@ void draw() {
   {
     draw_game();
   }
-
-}
-
-/*
-Mise à jour des éléments à mettre à jour à chaque frame.
-*/
-void update_game()
-{
   
+  // Mise à jour des données du jeu.
+  update_game();
+
 }
+
+
 /**
  * Gestion des évènements clavier
  */
 void keyPressed() {
-  if (GAME_STATE == START_MENU) {
+  
+  if (GAME_STATE == START_MENU) 
+  {
     if (key == 'x') {
       init_game();
 
     }
-  } else if (GAME_STATE == INIT_LANCER) {
+  } 
+  else if (GAME_STATE == INIT_LANCER) {
     if (key == CODED && keyCode == UP) // monter l'angle
     {
       player_angle_dattaque += 1;

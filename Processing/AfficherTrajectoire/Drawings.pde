@@ -39,25 +39,22 @@ void draw_game()
     drawSpeedVector();
     draw_boule();
 
-
-    index++;
-
-    if (commande_manuelle.coordonnees_trajectoire_y[index] <= 0 ) // Si fin de la trajectoire, fin de la partie
-    {
-      play_fx();
-      print("end game! index" + index + "instant_t" + commande_manuelle.instant_t);
-      GAME_STATE = END_GAME;
-    }
+    
   }
   else if (GAME_STATE == END_GAME) // Fin du jeu, Afficher du texte, proposer de recommencer
   {
 
-
-    textSize(30);
+    textSize(60);
     textAlign(CENTER, CENTER);
-    text("TRY AGAIN? [T]", 320, 60); 
+    text("SCORE:", 320, 120); 
+    
+    fill(0, 0, 0);
+    textSize(25);
+    textAlign(CENTER, CENTER);
+    text("TRY AGAIN? [T]", 320, 170); 
     fill(0, 0, 0);
   }
+
 }
 
 
@@ -91,7 +88,7 @@ void draw_boule()
   strokeWeight(10);
 
   if (GAME_STATE == INIT_LANCER)
-    ellipse(0*SCALE, window_size_y-hauteur_initiale*SCALE-HAUTEUR_SOL-5, 10, 10); 
+    ellipse(0*SCALE, window_size_y-HAUTEUR_INITIALE*SCALE-HAUTEUR_SOL-5, 10, 10); 
 
   else
     ellipse(commande_manuelle.coordonnees_trajectoire_x[index+1]*SCALE, window_size_y-commande_manuelle.coordonnees_trajectoire_y[index+1]*SCALE-HAUTEUR_SOL-5, 10, 10);
@@ -111,7 +108,7 @@ void draw_cochonnet()
 void drawSpeedVector() {
   stroke(0, 0, 255);  // Couleur du trait
   strokeWeight(5); //Epaisseur du trait
-  drawArrowPolar(0*SCALE, int(window_size_y-hauteur_initiale*SCALE-HAUTEUR_SOL-5), int(player_force*20), int(player_angle_dattaque));
+  drawArrowPolar(0*SCALE, int(window_size_y-HAUTEUR_INITIALE*SCALE-HAUTEUR_SOL-5), int(player_force*20), int(player_angle_dattaque));
 }
 
 /**
@@ -157,7 +154,7 @@ void draw_texts()
     textSize(15);
     fill(255, 255, 255);
     textAlign(LEFT, CENTER);
-    text("Controle de la player_force: GAUCHE-DROITE " + "\nControle de l'angle: HAUT-BAS", 10, 450);
+    text("Controle de la force: GAUCHE-DROITE " + "\nControle de l'angle: HAUT-BAS", 10, 450);
   } else
   {
     textSize(15);

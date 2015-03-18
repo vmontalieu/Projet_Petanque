@@ -52,23 +52,23 @@ void keyPressed() {
     {
       player_angle_dattaque += 1;
       if (player_angle_dattaque > 80) player_angle_dattaque = 80; // Limite
-      play_fx();
+      play_roll_fx();
       // Faire tout les
     } else if (key == CODED && keyCode == DOWN) // baisser l'angle
     {
       player_angle_dattaque -= 1;
       if (player_angle_dattaque < -80) player_angle_dattaque = -80; // Limite
-      play_fx();
+      play_roll_fx();
     } else if (key == CODED && keyCode == LEFT) // Baisser player_force
     {
       player_force -= 0.1;
       if (player_force < 1) player_force = 1; // Limite
-      play_fx();
+      play_roll_fx();
     } else if (key == CODED && keyCode == RIGHT) // Monter player_force
     {
       player_force += 0.1;
       if (player_force > 10) player_force = 10; // Limite
-      play_fx();
+      play_roll_fx();
     }
 
     if (key == ' ') // Lancer la boule
@@ -80,7 +80,8 @@ void keyPressed() {
     }
   } else if (GAME_STATE == END_GAME)
   {
-
+    
+    
     if (key == 't') // Retour au menu principal
     {
       init_game();

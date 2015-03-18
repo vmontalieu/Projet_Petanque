@@ -74,11 +74,11 @@ void update_game()
     
     if (position_boule_y <= 0 ) // Si fin de la trajectoire, fin de la partie
     {
-      play_fx();
+      
       
       // Update the score
       score =  int(100* (1 - ( abs(position_cochonnet - position_boule_x*SCALE)/window_size_x )));
-      
+      play_score_fx();
       GAME_STATE = END_GAME;
     }
   }

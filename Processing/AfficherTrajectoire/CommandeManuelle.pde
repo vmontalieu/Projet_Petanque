@@ -119,12 +119,6 @@ class CommandeManuelle
   }
 
 
-
-  float get_hauteur_initiale()
-  {
-    return hauteur_initiale;
-  }
-
   /*
   * Calcule tous les points de trajectoire, et stocke les réultats 
   * dans les tableaux coordonnees_trajectoire_x et coordonnees_trajectoire_y

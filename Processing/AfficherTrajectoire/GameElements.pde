@@ -19,7 +19,7 @@ float HAUTEUR_INITIALE = 1.0;
 /************ Données du jeu ************/
 
 PImage background_img;
-int index = 0;
+int temps = 0;
 CommandeManuelle commande_manuelle = new CommandeManuelle();
 
 /* Données du joueur */

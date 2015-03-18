@@ -9,7 +9,7 @@ void setup_game()
   init_player_data();
   setup_sound();
   play_music(); 
-  index = 0;
+  temps = 0;
   GAME_STATE = START_MENU;
 }
 
@@ -20,7 +20,7 @@ void init_game() {
   // Chargement du background
   background_img = loadImage("Background.jpg");
 
-  index = 0;
+  temps = 0;
   
   // On réinitialise pas les paramètres du joueur (force et angle d'attaque)
   score = 0;
@@ -63,14 +63,21 @@ void update_game()
   //
   else if (GAME_STATE == LANCER_BOULE)
   {
-    index++;
-
-    if (commande_manuelle.coordonnees_trajectoire_y[index] <= 0 ) // Si fin de la trajectoire, fin de la partie
+    // On avance dans le déplacement
+    temps++;
+    // Update de la position courante de la boule
+    position_boule_x = commande_manuelle.coordonnees_trajectoire_x[temps];
+    position_boule_y = commande_manuelle.coordonnees_trajectoire_y[temps];
+    // Normalisation de position_boule
+    
+    
+    
+    if (position_boule_y <= 0 ) // Si fin de la trajectoire, fin de la partie
     {
       play_fx();
       
       // Update the score
-      score = int( 100 * (1 - ( abs(position_cochonnet - commande_manuelle.coordonnees_trajectoire_y[index])/window_size_x )));
+      score =  int(100* (1 - ( abs(position_cochonnet - position_boule_x*SCALE)/window_size_x )));
       
       GAME_STATE = END_GAME;
     }

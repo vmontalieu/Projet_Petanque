@@ -48,7 +48,16 @@ void draw_game()
 
     textSize(60);
     textAlign(CENTER, CENTER);
-    text("SCORE:" + score + "%", 320, 120); 
+    if(score > 0)
+    {
+      text("SCORE:" + score + "%", 320, 120); 
+    }
+    else
+    {
+      text("OUT OF BOUNDS !", 320, 120); 
+    }
+    
+    
     
     fill(0, 0, 0);
     textSize(25);
@@ -63,20 +72,19 @@ void draw_game()
 void draw_trajectoire()
 {
 
-  if (commande_manuelle.coordonnees_trajectoire_y[index] <= 0) commande_manuelle.coordonnees_trajectoire_y[index] = 0; // on arrondit le y.
-  for (int i = 0; i < index; i++)
+  if (commande_manuelle.coordonnees_trajectoire_y[temps] <= 0) commande_manuelle.coordonnees_trajectoire_y[temps] = 0; // on arrondit le y.
+  for (int i = 0; i < temps; i++)
   {
     // Dessin de la ligne
-
     stroke(204, 0, 0);  // Couleur du trait
-    strokeWeight( 3 ); //Epaisseur du trait
+    strokeWeight( 2 ); //Epaisseur du trait
     line(commande_manuelle.coordonnees_trajectoire_x[i]*SCALE, 
     window_size_y-commande_manuelle.coordonnees_trajectoire_y[i]*SCALE-HAUTEUR_SOL, 
     commande_manuelle.coordonnees_trajectoire_x[i+1]*SCALE, 
     window_size_y-commande_manuelle.coordonnees_trajectoire_y[i+1]*SCALE-HAUTEUR_SOL); 
 
     // Points rouges
-    strokeWeight(10); // Epaisseur du trait
+    strokeWeight(8); // Epaisseur du trait
     point(commande_manuelle.coordonnees_trajectoire_x[i+1]*SCALE, window_size_y-commande_manuelle.coordonnees_trajectoire_y[i+1]*SCALE-HAUTEUR_SOL);
   }
 }
@@ -93,7 +101,7 @@ void draw_boule()
     ellipse(0*SCALE, window_size_y-HAUTEUR_INITIALE*SCALE-HAUTEUR_SOL-5, 10, 10); 
 
   else
-    ellipse(commande_manuelle.coordonnees_trajectoire_x[index+1]*SCALE, window_size_y-commande_manuelle.coordonnees_trajectoire_y[index+1]*SCALE-HAUTEUR_SOL-5, 10, 10);
+    ellipse(position_boule_x*SCALE, window_size_y-position_boule_y*SCALE-HAUTEUR_SOL-5, 10, 10);
 }
 
 /*
@@ -147,7 +155,7 @@ void draw_texts()
     textSize(15);
     textAlign(CENTER, CENTER);
     fill(0, 0, 0);
-    text("X:" + nf(commande_manuelle.coordonnees_trajectoire_x[index], 1, 2) + "          Y:" + nf(commande_manuelle.coordonnees_trajectoire_y[index], 1, 2), 320, 20); 
+    text("X:" + nf(position_boule_x, 1, 2) + "          Y:" + nf(position_boule_y, 1, 2), 320, 20); 
 
 
     textSize(15);

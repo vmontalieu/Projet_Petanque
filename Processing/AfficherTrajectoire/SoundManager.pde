@@ -23,7 +23,7 @@ void setup_sound()
 void play_music()
 {
   music_player = music_minim.loadFile("theme_music.mp3", 1024);
-  music_player.play();
+  //music_player.play();
 }
 
 void play_fx()

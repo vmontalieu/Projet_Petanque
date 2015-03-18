@@ -27,6 +27,7 @@ void draw_game()
 
     draw_texts();
     drawSpeedVector();
+    draw_cochonnet();
     draw_boule();
   }
   // La boule est lancée
@@ -35,6 +36,7 @@ void draw_game()
     background(background_img);
 
     draw_texts();
+    draw_cochonnet();
     draw_trajectoire();
     drawSpeedVector();
     draw_boule();
@@ -46,7 +48,7 @@ void draw_game()
 
     textSize(60);
     textAlign(CENTER, CENTER);
-    text("SCORE:", 320, 120); 
+    text("SCORE:" + score + "%", 320, 120); 
     
     fill(0, 0, 0);
     textSize(25);
@@ -99,7 +101,10 @@ void draw_boule()
 */
 void draw_cochonnet()
 {
-  
+  stroke(0,0 ,0);  // Couleur du trait
+  strokeWeight(2);
+  fill(255,51,51);
+  ellipse(position_cochonnet, window_size_y-HAUTEUR_SOL-5, 8, 8);
 }
 
 /**

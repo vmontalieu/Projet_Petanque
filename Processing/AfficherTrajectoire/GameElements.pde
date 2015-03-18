@@ -12,7 +12,7 @@ int END_GAME = 10; // Moment où la boule est lancée
 // Valeur d'échelle pour mieux voir la trajectoire
 int SCALE = 100;
 // La hauteur du sol
-int HAUTEUR_SOL = 85; 
+int HAUTEUR_SOL = 70; 
 // La hauteur initiale du lancer
 float HAUTEUR_INITIALE = 1.0;
 
@@ -28,6 +28,8 @@ float player_angle_dattaque = 0;
 float position_boule_x;
 float position_boule_y;
 int score;
+
+int position_cochonnet;
 
 /**************************************/
 

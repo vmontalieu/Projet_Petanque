@@ -24,7 +24,9 @@ void init_game() {
   
   // On réinitialise pas les paramètres du joueur (force et angle d'attaque)
   score = 0;
+  init_cochonnet();
   init_boule();
+  
   GAME_STATE = INIT_LANCER; // On enchaine sur l'init lancer
 }
 
@@ -46,6 +48,10 @@ void init_boule()
     position_boule_y = HAUTEUR_INITIALE;
 }
 
+void init_cochonnet()
+{
+  position_cochonnet = int(random( window_size_x/5, window_size_x - window_size_x/5));
+}
 
 void update_game()
 {
@@ -62,7 +68,10 @@ void update_game()
     if (commande_manuelle.coordonnees_trajectoire_y[index] <= 0 ) // Si fin de la trajectoire, fin de la partie
     {
       play_fx();
-      print("end game! index" + index + "instant_t" + commande_manuelle.instant_t);
+      
+      // Update the score
+      score = int( 100 * (1 - ( abs(position_cochonnet - commande_manuelle.coordonnees_trajectoire_y[index])/window_size_x )));
+      
       GAME_STATE = END_GAME;
     }
   }

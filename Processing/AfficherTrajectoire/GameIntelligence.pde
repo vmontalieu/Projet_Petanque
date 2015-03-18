@@ -20,6 +20,7 @@ void init_game() {
   // Chargement du background
   background_img = loadImage("Background.jpg");
 
+
   temps = 0;
   
   // On réinitialise pas les paramètres du joueur (force et angle d'attaque)

@@ -22,6 +22,8 @@ PImage background_img;
 int temps = 0;
 CommandeManuelle commande_manuelle = new CommandeManuelle();
 
+
+
 /* Données du joueur */
 float player_force = 0;
 float player_angle_dattaque = 0;

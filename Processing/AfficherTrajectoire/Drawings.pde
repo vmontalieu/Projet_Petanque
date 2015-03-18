@@ -13,6 +13,14 @@ void draw_menu()
     textSize(32);
     textAlign(CENTER, BOTTOM);
     text("Press [X] to start", 320, 400); 
+    
+    
+    textSize(15);
+    fill(100, 100, 100);
+    textAlign(CENTER, BOTTOM);
+    text("Nicolas Sintes, Maxime Touroute and Vincent Montalieu", 320, 30);
+    textSize(20);
+    text("presents", 320, 55); 
     fill(0, 0, 0);
     
 }

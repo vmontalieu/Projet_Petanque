@@ -40,7 +40,7 @@ void play_score_fx()
 {
   // Son différent selon le score
   
-  if(score < 50)
+  if(score < 65)
     score_fx_player = music_minim.loadFile("fx_score_1.mp3", 1024);
   else if(score < 90)
     score_fx_player = music_minim.loadFile("fx_score_2.mp3", 1024);

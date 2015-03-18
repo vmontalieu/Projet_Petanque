@@ -1,5 +1,11 @@
-/* SOUND ! */
+/* Gestion du son 
+*  18/03/2015
+*  Maxime Touroute
+*/
+
+
 import ddf.minim.*;
+
 
 Minim music_minim;
 Minim fx_minim;

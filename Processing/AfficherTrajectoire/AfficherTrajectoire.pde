@@ -1,40 +1,5 @@
-/**
- * Dessin de trajectoire
- */
-
-String[] coordonnees_trajectoire;
-
-/* Etats du programme */
-
-int GAME_STATE;
-int START_MENU = 1;
-int INIT_GAME = 2;
-int INIT_LANCER = 3; // Moment où on choisit la vitesse et l'angle d'attaque
-int LANCER_BOULE = 4; // Moment où la boule est lancée
-int END_GAME = 10; // Moment où la boule est lancée
 
 
-// Valeur d'échelle pour mieux voir la trajectoire
-int scale = 100;
-
-int index = 0;
-// Taille de la fenêtre
-int window_size_x = 640;
-int window_size_y = 480;
-int hauteur_du_sol = 85; // La hauteur du sol
-
-
-CommandeManuelle C = new CommandeManuelle();
-
-
-
-
-  
-
-PImage img, img2;
-
-float force = 0;
-float angle_dattaque = 0;
 
 
 void setup() 
@@ -43,11 +8,11 @@ void setup()
   size(window_size_x, window_size_y);
   background(0);
   stroke(255);
-  frameRate(30);
+  frameRate(framerate);
 
   index = 0;
-  force = 5;
-  angle_dattaque = 45;
+  player_force = 5;
+  player_angle_dattaque = 45;
   
   setup_sound();
   play_music();
@@ -60,14 +25,9 @@ void setup()
  */
 void init_game() {
   // Chargement du background
-  img = loadImage("Background.jpg");
-  img = loadImage("test.png");
+  background_img = loadImage("Background.jpg");
+
   index = 0;
-
-  // On reset le vecteur vitesse pour plus de swagg
-  force = 5;
-  angle_dattaque = 45;  
-
 
   GAME_STATE = INIT_LANCER; // On enchaine sur l'init lancer
 }
@@ -103,15 +63,14 @@ void draw() {
   // Le départ de lancement de la boule
   else if (GAME_STATE == INIT_LANCER)
   {
-    background(img);
-    //background(img2, 1);
+    background(background_img);
 
     draw_texts();
     drawSpeedVector();
     draw_boule();
   } else if (GAME_STATE == LANCER_BOULE)
   {
-    background(img);
+    background(background_img);
 
     draw_texts();
     draw_trajectoire();
@@ -121,10 +80,10 @@ void draw() {
 
     index++;
 
-    if (C.coordonnees_trajectoire_y[index] <= 0 ) // Si fin de la trajectoire, fin de la partie
+    if (commande_manuelle.coordonnees_trajectoire_y[index] <= 0 ) // Si fin de la trajectoire, fin de la partie
     {
       play_fx();
-      print("end game! index" + index + "instant_t" + C.instant_t);
+      print("end game! index" + index + "instant_t" + commande_manuelle.instant_t);
       GAME_STATE = END_GAME;
     }
   } else if (GAME_STATE == END_GAME) // Fin du jeu, Afficher du texte, proposer de recommencer
@@ -157,32 +116,32 @@ void keyPressed() {
   } else if (GAME_STATE == INIT_LANCER) {
     if (key == CODED && keyCode == UP) // monter l'angle
     {
-      angle_dattaque += 1;
-      if (angle_dattaque > 80) angle_dattaque = 80; // Limite
+      player_angle_dattaque += 1;
+      if (player_angle_dattaque > 80) player_angle_dattaque = 80; // Limite
       play_fx();
       // Faire tout les
     } else if (key == CODED && keyCode == DOWN) // baisser l'angle
     {
-      angle_dattaque -= 1;
-      if (angle_dattaque < -80) angle_dattaque = -80; // Limite
+      player_angle_dattaque -= 1;
+      if (player_angle_dattaque < -80) player_angle_dattaque = -80; // Limite
       play_fx();
-    } else if (key == CODED && keyCode == LEFT) // Baisser force
+    } else if (key == CODED && keyCode == LEFT) // Baisser player_force
     {
-      force -= 0.1;
-      if (force < 1) force = 1; // Limite
+      player_force -= 0.1;
+      if (player_force < 1) player_force = 1; // Limite
       play_fx();
-    } else if (key == CODED && keyCode == RIGHT) // Monter force
+    } else if (key == CODED && keyCode == RIGHT) // Monter player_force
     {
-      force += 0.1;
-      if (force > 10) force = 10; // Limite
+      player_force += 0.1;
+      if (player_force > 10) player_force = 10; // Limite
       play_fx();
     }
 
     if (key == ' ') // Lancer la boule
     {
-      C = new CommandeManuelle();
-      C.set_conditions_initiales(force, angle_dattaque);
-      C.compute_trajectoire();
+      commande_manuelle = new CommandeManuelle();
+      commande_manuelle.set_conditions_initiales(player_force, player_angle_dattaque);
+      commande_manuelle.compute_trajectoire();
       GAME_STATE = LANCER_BOULE;
     }
   } else if (GAME_STATE == END_GAME)
@@ -206,21 +165,21 @@ void keyPressed() {
 void draw_trajectoire()
 {
 
-  if (C.coordonnees_trajectoire_y[index] <= 0) C.coordonnees_trajectoire_y[index] = 0; // on arrondit le y.
+  if (commande_manuelle.coordonnees_trajectoire_y[index] <= 0) commande_manuelle.coordonnees_trajectoire_y[index] = 0; // on arrondit le y.
   for (int i = 0; i < index; i++)
   {
     // Dessin de la ligne
 
     stroke(204, 0, 0);  // Couleur du trait
     strokeWeight( 3 ); //Epaisseur du trait
-    line(C.coordonnees_trajectoire_x[i]*scale, 
-    window_size_y-C.coordonnees_trajectoire_y[i]*scale-hauteur_du_sol, 
-    C.coordonnees_trajectoire_x[i+1]*scale, 
-    window_size_y-C.coordonnees_trajectoire_y[i+1]*scale-hauteur_du_sol); 
+    line(commande_manuelle.coordonnees_trajectoire_x[i]*scale, 
+    window_size_y-commande_manuelle.coordonnees_trajectoire_y[i]*scale-hauteur_du_sol, 
+    commande_manuelle.coordonnees_trajectoire_x[i+1]*scale, 
+    window_size_y-commande_manuelle.coordonnees_trajectoire_y[i+1]*scale-hauteur_du_sol); 
 
     // Points rouges
     strokeWeight(10); // Epaisseur du trait
-    point(C.coordonnees_trajectoire_x[i+1]*scale, window_size_y-C.coordonnees_trajectoire_y[i+1]*scale-hauteur_du_sol);
+    point(commande_manuelle.coordonnees_trajectoire_x[i+1]*scale, window_size_y-commande_manuelle.coordonnees_trajectoire_y[i+1]*scale-hauteur_du_sol);
   }
 }
 
@@ -236,7 +195,7 @@ void draw_boule()
     ellipse(0*scale, window_size_y-hauteur_initiale*scale-hauteur_du_sol-5, 10, 10); 
 
   else
-    ellipse(C.coordonnees_trajectoire_x[index+1]*scale, window_size_y-C.coordonnees_trajectoire_y[index+1]*scale-hauteur_du_sol-5, 10, 10);
+    ellipse(commande_manuelle.coordonnees_trajectoire_x[index+1]*scale, window_size_y-commande_manuelle.coordonnees_trajectoire_y[index+1]*scale-hauteur_du_sol-5, 10, 10);
 }
 
 /**
@@ -245,7 +204,7 @@ void draw_boule()
 void drawSpeedVector() {
   stroke(0, 0, 255);  // Couleur du trait
   strokeWeight(5); //Epaisseur du trait
-  drawArrowPolar(0*scale, int(window_size_y-hauteur_initiale*scale-hauteur_du_sol-5), int(force*20), int(angle_dattaque));
+  drawArrowPolar(0*scale, int(window_size_y-hauteur_initiale*scale-hauteur_du_sol-5), int(player_force*20), int(player_angle_dattaque));
 }
 
 /**
@@ -279,19 +238,19 @@ void draw_texts()
     textSize(15);
     textAlign(CENTER, CENTER);
     fill(0, 0, 0);
-    text("X:" + nf(C.coordonnees_trajectoire_x[index], 1, 2) + "          Y:" + nf(C.coordonnees_trajectoire_y[index], 1, 2), 320, 20); 
+    text("X:" + nf(commande_manuelle.coordonnees_trajectoire_x[index], 1, 2) + "          Y:" + nf(commande_manuelle.coordonnees_trajectoire_y[index], 1, 2), 320, 20); 
 
 
     textSize(15);
     textAlign(CENTER, CENTER);
     fill(0, 0, 0);
-    text("Force: " + nf(force, 1, 1) + " m/s\nAngle: " + int(angle_dattaque) + "°", 500, 20); 
+    text("Force: " + nf(player_force, 1, 1) + " m/s\nAngle: " + int(player_angle_dattaque) + "°", 500, 20); 
 
 
     textSize(15);
     fill(255, 255, 255);
     textAlign(LEFT, CENTER);
-    text("Controle de la force: GAUCHE-DROITE " + "\nControle de l'angle: HAUT-BAS", 10, 450);
+    text("Controle de la player_force: GAUCHE-DROITE " + "\nControle de l'angle: HAUT-BAS", 10, 450);
   } else
   {
     textSize(15);

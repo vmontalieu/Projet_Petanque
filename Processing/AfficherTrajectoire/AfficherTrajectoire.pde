@@ -14,7 +14,6 @@ int LANCER_BOULE = 4; // Moment où la boule est lancée
 int END_GAME = 10; // Moment où la boule est lancée
 
 
-
 // Valeur d'échelle pour mieux voir la trajectoire
 int scale = 100;
 
@@ -27,7 +26,12 @@ int hauteur_du_sol = 85; // La hauteur du sol
 
 CommandeManuelle C = new CommandeManuelle();
 
-PImage img;
+
+
+
+  
+
+PImage img, img2;
 
 float force = 0;
 float angle_dattaque = 0;
@@ -44,7 +48,10 @@ void setup()
   index = 0;
   force = 5;
   angle_dattaque = 45;
-
+  
+  setup_sound();
+  play_music();
+  
   GAME_STATE = START_MENU;
 }
 
@@ -54,11 +61,13 @@ void setup()
 void init_game() {
   // Chargement du background
   img = loadImage("Background.jpg");
+  img = loadImage("test.png");
   index = 0;
 
   // On reset le vecteur vitesse pour plus de swagg
   force = 5;
-  angle_dattaque = 45;
+  angle_dattaque = 45;  
+
 
   GAME_STATE = INIT_LANCER; // On enchaine sur l'init lancer
 }
@@ -95,6 +104,7 @@ void draw() {
   else if (GAME_STATE == INIT_LANCER)
   {
     background(img);
+    //background(img2, 1);
 
     draw_texts();
     drawSpeedVector();
@@ -113,6 +123,7 @@ void draw() {
 
     if (C.coordonnees_trajectoire_y[index] <= 0 ) // Si fin de la trajectoire, fin de la partie
     {
+      play_fx();
       print("end game! index" + index + "instant_t" + C.instant_t);
       GAME_STATE = END_GAME;
     }
@@ -148,19 +159,23 @@ void keyPressed() {
     {
       angle_dattaque += 1;
       if (angle_dattaque > 80) angle_dattaque = 80; // Limite
+      play_fx();
       // Faire tout les
     } else if (key == CODED && keyCode == DOWN) // baisser l'angle
     {
       angle_dattaque -= 1;
       if (angle_dattaque < -80) angle_dattaque = -80; // Limite
+      play_fx();
     } else if (key == CODED && keyCode == LEFT) // Baisser force
     {
       force -= 0.1;
       if (force < 1) force = 1; // Limite
+      play_fx();
     } else if (key == CODED && keyCode == RIGHT) // Monter force
     {
       force += 0.1;
       if (force > 10) force = 10; // Limite
+      play_fx();
     }
 
     if (key == ' ') // Lancer la boule
@@ -284,5 +299,11 @@ void draw_texts()
     text("ERROR draw_texts()", 320, 20); 
     fill(0, 0, 0);
   }
+}
+
+
+void stop()
+{
+  stop_sound();
 }
 

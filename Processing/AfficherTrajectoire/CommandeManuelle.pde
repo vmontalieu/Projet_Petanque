@@ -27,7 +27,7 @@ class CommandeManuelle
   // MAtrice 4x4
   float[][] Ad = { 
     {
-      1.0, 0.04, 0, 0
+      1.0, 0.03, 0, 0
     }
     , 
     {
@@ -35,7 +35,7 @@ class CommandeManuelle
     }
     , 
     {
-      0.0, 0.0, 1.0, 0.04
+      0.0, 0.0, 1.0, 0.03
     }
     , 
     {
@@ -46,19 +46,19 @@ class CommandeManuelle
   // MAtrice 2x'4
   float[][] Bd = { 
     {
-      0.0008, 0
+      0.00045, 0
     }
     , 
     {
-      0.04, 0
+      0.03, 0
     }
     , 
     {
-      0, 0.0008
+      0, 0.00045
     }
     , 
     { 
-      0, 0.04
+      0, 0.03
     }
   }; 
 

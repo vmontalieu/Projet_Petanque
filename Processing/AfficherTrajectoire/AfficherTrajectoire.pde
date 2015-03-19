@@ -50,23 +50,23 @@ void keyPressed() {
   else if (GAME_STATE == INIT_LANCER) {
     if (key == CODED && keyCode == UP) // monter l'angle
     {
-      player_angle_dattaque += 1;
+      player_angle_dattaque += 2;
       if (player_angle_dattaque > 80) player_angle_dattaque = 80; // Limite
       play_roll_fx();
       // Faire tout les
     } else if (key == CODED && keyCode == DOWN) // baisser l'angle
     {
-      player_angle_dattaque -= 1;
+      player_angle_dattaque -= 2;
       if (player_angle_dattaque < -80) player_angle_dattaque = -80; // Limite
       play_roll_fx();
     } else if (key == CODED && keyCode == LEFT) // Baisser player_force
     {
-      player_force -= 0.1;
+      player_force -= 0.2;
       if (player_force < 1) player_force = 1; // Limite
       play_roll_fx();
     } else if (key == CODED && keyCode == RIGHT) // Monter player_force
     {
-      player_force += 0.1;
+      player_force += 0.2;
       if (player_force > 10) player_force = 10; // Limite
       play_roll_fx();
     }

@@ -2,7 +2,7 @@
 
 masse = 0.8; //kg
 gterre = 9.81;
-Te = 0.04 // 40ms
+Te = 0.03 // 40ms
 
 
 // Conditions initiales

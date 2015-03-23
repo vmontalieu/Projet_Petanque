@@ -38,6 +38,7 @@ void draw_game()
     draw_cochonnet();
     draw_boule();
   }
+  
   // La boule est lancée
   else if (GAME_STATE == LANCER_BOULE)
   {
@@ -48,12 +49,10 @@ void draw_game()
     draw_trajectoire();
     drawSpeedVector();
     draw_boule();
-
-    
   }
+  
   else if (GAME_STATE == END_GAME) // Fin du jeu, Afficher du texte, proposer de recommencer
-  {
-
+  {   
     textSize(60);
     textAlign(CENTER, CENTER);
     if(score > 0)
@@ -80,7 +79,8 @@ void draw_game()
 void draw_trajectoire()
 {
 
-  if (commande_manuelle.coordonnees_trajectoire_y[temps] <= 0) commande_manuelle.coordonnees_trajectoire_y[temps] = 0; // on arrondit le y.
+  
+  
   for (int i = 0; i < temps; i++)
   {
     // Dessin de la ligne
@@ -120,7 +120,7 @@ void draw_cochonnet()
   stroke(0,0 ,0);  // Couleur du trait
   strokeWeight(2);
   fill(255,51,51);
-  ellipse(position_cochonnet, window_size_y-HAUTEUR_SOL-5, 8, 8);
+  ellipse(position_cochonnet, window_size_y-HAUTEUR_SOL-4, 8, 8);
 }
 
 /**

@@ -66,6 +66,9 @@ void update_game()
   {
     // On avance dans le déplacement
     temps++;
+    
+    if (commande_manuelle.coordonnees_trajectoire_y[temps] <= 0) commande_manuelle.coordonnees_trajectoire_y[temps] = 0; // on arrondit le y.
+    
     // Update de la position courante de la boule
     position_boule_x = commande_manuelle.coordonnees_trajectoire_x[temps];
     position_boule_y = commande_manuelle.coordonnees_trajectoire_y[temps];
@@ -75,11 +78,13 @@ void update_game()
     
     if (position_boule_y <= 0 ) // Si fin de la trajectoire, fin de la partie
     {
-      
-      
+      //TODO: interpollation à faire ici ?
+
       // Update the score
-      score =  int(100* (1 - ( abs(position_cochonnet - position_boule_x*SCALE)/window_size_x )));
+      score =  int(100* (1 - ( abs(position_cochonnet - position_boule_x*SCALE)/window_size_x ))); //TODO: buggé
       play_score_fx();
+      
+      draw_game(); // Dessine une dernière fois la scène
       GAME_STATE = END_GAME;
     }
   }

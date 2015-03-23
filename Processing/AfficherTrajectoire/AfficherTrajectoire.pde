@@ -17,7 +17,10 @@ void setup()
 
 
 void draw() {
-
+  
+  // Mise à jour des données du jeu.
+  update_game();
+  
   // Dessin de la fenêtre
   
   if (GAME_STATE == START_MENU) 
@@ -29,8 +32,7 @@ void draw() {
     draw_game();
   }
   
-  // Mise à jour des données du jeu.
-  update_game();
+
 
 }
 

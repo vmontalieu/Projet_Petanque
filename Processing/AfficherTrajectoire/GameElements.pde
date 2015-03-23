@@ -9,10 +9,9 @@ int INIT_LANCER = 3; // Moment où on choisit la vitesse et l'angle d'attaque
 int LANCER_BOULE = 4; // Moment où la boule est lancée
 int END_GAME = 10; // Moment où la boule est lancée
 
-// Valeur d'échelle pour mieux voir la trajectoire
-int SCALE = 100;
+
 // La hauteur du sol
-int HAUTEUR_SOL = 70; 
+int HAUTEUR_SOL = 65; 
 // La hauteur initiale du lancer
 float HAUTEUR_INITIALE = 1.0;
 

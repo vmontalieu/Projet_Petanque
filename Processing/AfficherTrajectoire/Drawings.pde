@@ -7,20 +7,20 @@ void draw_menu()
     background(224, 224, 224);
     textSize(64);
     textAlign(CENTER, CENTER);
-    text("Projet Petanque", 320, 200); 
+    text("Projet Petanque", 400, 200); 
     fill(0, 0, 0);
 
     textSize(32);
     textAlign(CENTER, BOTTOM);
-    text("Press [X] to start", 320, 400); 
+    text("Press [X] to start", 400, 400); 
     
     
     textSize(15);
     fill(100, 100, 100);
     textAlign(CENTER, BOTTOM);
-    text("Nicolas Sintes, Maxime Touroute and Vincent Montalieu", 320, 30);
+    text("Nicolas Sintes, Maxime Touroute and Vincent Montalieu", 400, 30);
     textSize(20);
-    text("presents", 320, 55); 
+    text("presents", 400, 55); 
     fill(0, 0, 0);
     
 }
@@ -58,11 +58,11 @@ void draw_game()
     textAlign(CENTER, CENTER);
     if(score > 0)
     {
-      text("SCORE:" + score + "%", 320, 120); 
+      text("SCORE:" + score + "%", 400, 120); 
     }
     else
     {
-      text("OUT OF BOUNDS !", 320, 120); 
+      text("OUT OF BOUNDS !", 400, 120); 
     }
     
     
@@ -70,7 +70,7 @@ void draw_game()
     fill(0, 0, 0);
     textSize(25);
     textAlign(CENTER, CENTER);
-    text("TRY AGAIN? [T]", 320, 170); 
+    text("TRY AGAIN? [T]", 400, 170); 
     fill(0, 0, 0);
   }
 
@@ -163,7 +163,7 @@ void draw_texts()
     textSize(15);
     textAlign(CENTER, CENTER);
     fill(0, 0, 0);
-    text("X:" + nf(position_boule_x, 1, 2) + "          Y:" + nf(position_boule_y, 1, 2), 320, 20); 
+    text("X:" + nf(position_boule_x, 1, 2) + "          Y:" + nf(position_boule_y, 1, 2), 350, 20); 
 
 
     textSize(15);
@@ -175,12 +175,12 @@ void draw_texts()
     textSize(15);
     fill(255, 255, 255);
     textAlign(LEFT, CENTER);
-    text("Controle de la force: GAUCHE-DROITE " + "\nControle de l'angle: HAUT-BAS", 10, 450);
+    text("Controle de la force: GAUCHE-DROITE " + "\nControle de l'angle: HAUT-BAS", 10, 420);
   } else
   {
     textSize(15);
     textAlign(CENTER, CENTER);
-    text("ERROR draw_texts()", 320, 20); 
+    text("ERROR draw_texts()", 400, 20); 
     fill(0, 0, 0);
   }
 }

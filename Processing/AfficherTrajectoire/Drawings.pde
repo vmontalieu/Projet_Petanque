@@ -55,7 +55,8 @@ void draw_game()
   {   
     textSize(60);
     textAlign(CENTER, CENTER);
-    if(score > 0)
+    // TODO : affiner le réglage du out of bounds : apparait même si la boule est encore un peu à l'écran
+    if(position_boule_x*SCALE < window_size_x)
     {
       text("SCORE:" + score + "%", 400, 120); 
     }

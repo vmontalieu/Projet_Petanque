@@ -191,5 +191,121 @@ class CommandeManuelle
       coordonnees_trajectoire_y[instant_t] = Xsuivant[2][0];
     }
   }
+  
+  
+  void compute_cheatmode()
+  {
+    // En entrée, le vecteur X0 d'où on est.
+    float[][] X0 = {{0},{0},{2},{0}}; 
+   // On veut aller à 
+  float[][] Xh = {  
+    {10},{0},{0},{0}};  
+    
+    // en h étapes
+    int h = 30;
+    
+    // Matrice de gouvernabilité : les premières valeurs c'est Bd
+    // MAtrice 2x'4
+      //float[][] Bd = { {0.00045, 0},{0.03, 0},{0, 0.00045},{0, 0.03} }; 
+    
+    float[][] G = new float[4][2*h];
+    
+    //TODO: récupérer proprement les vraies valeurs de Bd parce que là merci bien
+    G[0][0] = 0.00045;
+    G[0][1] = 0.03;
+    G[0][2] = 0;
+    G[0][3] = 0;
+    
+    G[1][0] = 0;
+    G[1][1] = 0;
+    G[1][2] = 0.00045;
+    G[1][3] = 0.03;
+    
+    
+    // Calcul de la matrice de gouvernabilité
+   
+   
+   /*
+  // On calcule la trajectoire en fait si on touche à rien?
+  for(int k = 1 ; k < h-1 ; k++)
+  {
+    // Scilab : G=[(Ad^k)*Bd,G];
+    float[][] Adk = Ad;
+    for(int i = 0 ; i < k ; i++)
+    {
+      Adk = Mat.multiply(Adk,Ad);
+    }  
+    
+    G = Mat.multiply(Adk,Bd);
+  }
+  
+    // Scilab: Calcul de la solution
+   // y = Xh - (Ad^h) * X0; // y, le vecteur final qu'on veut atteindre ?
+   float[][] Adh = Ad;
+   for(int i = 0 ; i < h ; i++)
+   {
+     Adh = Mat.multiply(Adh, Ad);
+   }
+   
+   Adh = Mat.multiply(Adh, X0);
+   
+   float[] y = Mat.sum(Xh, Adh);
+   
+   Mat.print(y);
+   // Gt = G'; // G' donne la transposée de G
+   
+   
+   
+   for(i=0; i<m; i++)
+   {
+      for(j=0; j<n; j++)
+      {
+           b[j][i] = a[i][j];
+      }
+   }
+   
+    for (int i = 0; i < 4; i++) // Les 4 lignes
+    {
+      for (int j = 0; j < 4; j++) // les 4 colonnes
+      {
+        Xsuivant[i][0] += Ad[i][j]*X[j][0] ;//+ Bd*a;
+      }
+    }
+
+   // u = (Gt * inv(G * Gt)) * y; 
+    // Size(G*Gt) renvoit 4x4
+    
+    
+    
+    
+    // Code Scilab: ajout de la gravité
+    /*
+        // vecteur des commandes des réacteurs
+    a = u;
+    //calcul de ay(n) = u(2*n)+glune/erg
+    for n=1:h do
+        a(2*n) = a(2*n) - (gterre);
+        //a(n) = a(n)-gterre;
+    end
+    */
+    
+    
+    // Code Scilab: calcul de la nouvelle trajectoire
+    
+    /*
+    // On calcule les nouvelles coordonnées du truc
+for k=1:h-1 // Tant que la position en y est supérieure à 0 (pas encore par terre)
+                                 // vecteur U + a
+    Xsuivant = Ad*Xsuivant + Bd*[a(k);a(2*k)];
+    X = [X, Xsuivant]; // On ajoute la valeur à la matrice X
+   // t = t+1;    
+end
+*/
+    
+    
+  }  
+  
+  
+  
 }
 

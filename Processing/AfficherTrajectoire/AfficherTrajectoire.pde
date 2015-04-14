@@ -1,3 +1,5 @@
+import papaya.*;
+
 
 /* Le Coeur du programme. draw et keyPressed s'executent en boucle */
 
@@ -78,6 +80,7 @@ void keyPressed() {
       commande_manuelle = new CommandeManuelle();
       commande_manuelle.set_conditions_initiales(player_force, player_angle_dattaque);
       commande_manuelle.compute_trajectoire();
+      //commande_manuelle.compute_cheatmode();
       GAME_STATE = LANCER_BOULE;
     }
   } else if (GAME_STATE == END_GAME)

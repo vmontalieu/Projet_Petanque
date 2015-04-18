@@ -27,19 +27,19 @@ void setup_sound()
 
 void play_music()
 {
-  music_player = music_minim.loadFile("theme_music.mp3", 1024);
-  music_player.play();
+ // music_player = music_minim.loadFile("theme_music.mp3", 1024);
+ // music_player.play();
 }
 
 void play_roll_fx()
 {
      
-    roll_fx_player.play();
+   // roll_fx_player.play();
 }
 void play_score_fx()
 {
   // Son différent selon le score
-  
+ /* 
   if(score < 65)
     score_fx_player = music_minim.loadFile("fx_score_1.mp3", 1024);
   else if(score < 90)
@@ -47,11 +47,12 @@ void play_score_fx()
   else
     score_fx_player = music_minim.loadFile("fx_score_3.mp3", 1024);
     
-  score_fx_player.play();
+  score_fx_player.play();*/
 }
 
 void stop_sound()
 {
+  
   music_player.close();
   music_minim.stop();
   

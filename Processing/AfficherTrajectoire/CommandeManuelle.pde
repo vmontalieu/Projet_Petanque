@@ -220,13 +220,13 @@ class CommandeManuelle
         position_cochonnet/SCALE
       }
       , {
-        0
+        1
       }
       , {
         0
       }
       , {
-        0
+        -1
       }
     };   // TODO: remplacer ça par la position du cochonnet
 
@@ -531,6 +531,11 @@ class CommandeManuelle
 
   // TODO: dire que là on a pas la rgavité hein ! si on la rajoute dans scilab faut aussi la rajouter ici
 
+  for(int k = 0 ; k < h*2 ; k+=2)
+  {
+    u[k][0] -= gterre;
+  } 
+
 
     // ************************************************************************Plus qu'à balance
         // Initialisation du prochain vecteur à calculer
@@ -617,7 +622,7 @@ class CommandeManuelle
       
       print(coordonnees_trajectoire_x_triche[instant_t], ",");
       print(coordonnees_trajectoire_y_triche[instant_t], "\n");
-      
+      print("X a atteindre!", Xh[0][0], "\n");
       //if ( X[2][0] > 0 ) // Tant que la position en y est supérieure à 0 (par encore par terre)
         //break;
     }

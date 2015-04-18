@@ -10,6 +10,9 @@ int LANCER_BOULE = 4; // Moment où la boule est lancée
 int END_GAME = 10; // Moment où la boule est lancée
 
 
+
+boolean CHEAT_MODE = false;
+
 // La hauteur du sol
 int HAUTEUR_SOL = 65; 
 // La hauteur initiale du lancer

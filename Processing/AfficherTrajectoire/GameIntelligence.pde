@@ -3,7 +3,7 @@
 
 /*
 * Création du jeu
-*/
+ */
 void setup_game()
 {
   init_player_data();
@@ -22,31 +22,29 @@ void init_game() {
 
 
   temps = 0;
-  
+
   // On réinitialise pas les paramètres du joueur (force et angle d'attaque)
   score = 0;
   init_cochonnet();
   init_boule();
-  
+
   GAME_STATE = INIT_LANCER; // On enchaine sur l'init lancer
 }
 
 
 /*
 Initialise les données liées au joueur
-*/
+ */
 void init_player_data()
 {
   player_force = 5;
   player_angle_dattaque = 45;
-  
-
 }
 
 void init_boule()
 {
-    position_boule_x = 0;
-    position_boule_y = HAUTEUR_INITIALE;
+  position_boule_x = 0;
+  position_boule_y = HAUTEUR_INITIALE;
 }
 
 void init_cochonnet()
@@ -59,23 +57,32 @@ void update_game()
   // Le départ de lancement de la boule
   if (GAME_STATE == INIT_LANCER)
   {
-    
   }
   //
   else if (GAME_STATE == LANCER_BOULE)
   {
     // On avance dans le déplacement
     temps++;
-    
+
     if (commande_manuelle.coordonnees_trajectoire_y[temps] <= 0) commande_manuelle.coordonnees_trajectoire_y[temps] = 0; // on arrondit le y.
-    
+
     // Update de la position courante de la boule
-    position_boule_x = commande_manuelle.coordonnees_trajectoire_x[temps];
-    position_boule_y = commande_manuelle.coordonnees_trajectoire_y[temps];
+    if(CHEAT_MODE)
+    {
+      position_boule_x = commande_manuelle.coordonnees_trajectoire_x_triche[temps];
+      position_boule_y = commande_manuelle.coordonnees_trajectoire_y_triche[temps];
+      
+      print("BOULE : x",commande_manuelle.coordonnees_trajectoire_x_triche[temps] ,"y",commande_manuelle.coordonnees_trajectoire_y_triche[temps] ,"\n");
+    } else
+    {
+      position_boule_x = commande_manuelle.coordonnees_trajectoire_x[temps];
+      position_boule_y = commande_manuelle.coordonnees_trajectoire_y[temps];
+    }
+
     // Normalisation de position_boule
-    
-    
-    
+
+
+
     if (position_boule_y <= 0 ) // Si fin de la trajectoire, fin de la partie
     {
       //TODO: interpollation à faire ici ?
@@ -83,14 +90,12 @@ void update_game()
       // Update the score
       score =  int(100* (1 - ( abs(position_cochonnet - position_boule_x*SCALE)/window_size_x ))); //TODO: buggé
       play_score_fx();
-      
-      draw_game(); // Dessine une dernière fois la scène
+
+      //draw_game(); // Dessine une dernière fois la scène
       GAME_STATE = END_GAME;
     }
-  }
-  else if (GAME_STATE == END_GAME)
+  } else if (GAME_STATE == END_GAME)
   {
-  
   }
-  
 }
+

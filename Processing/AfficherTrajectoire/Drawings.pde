@@ -47,6 +47,8 @@ void draw_game()
     draw_texts();
     draw_cochonnet();
     draw_trajectoire();
+    if(CHEAT_MODE) draw_trajectoire_triche();
+    
     drawSpeedVector();
     draw_boule();
   }
@@ -98,14 +100,44 @@ void draw_trajectoire()
   }
 }
 
+void draw_trajectoire_triche()
+{
+
+  
+  
+  for (int i = 0; i < temps; i++)
+  {
+    // Dessin de la ligne
+    stroke(0, 204, 0);  // Couleur du trait
+    strokeWeight( 2 ); //Epaisseur du trait
+    line(commande_manuelle.coordonnees_trajectoire_x_triche[i]*SCALE, 
+    window_size_y-commande_manuelle.coordonnees_trajectoire_y_triche[i]*SCALE-HAUTEUR_SOL, 
+    commande_manuelle.coordonnees_trajectoire_x_triche[i+1]*SCALE, 
+    window_size_y-commande_manuelle.coordonnees_trajectoire_y_triche[i+1]*SCALE-HAUTEUR_SOL); 
+
+    // Points rouges
+    strokeWeight(8); // Epaisseur du trait
+    point(commande_manuelle.coordonnees_trajectoire_x_triche[i+1]*SCALE, window_size_y-commande_manuelle.coordonnees_trajectoire_y_triche[i+1]*SCALE-HAUTEUR_SOL);
+  }
+}
+
+
+
 /*
 Dessine la boule
  */
 void draw_boule()
 {
-  stroke(64, 64, 64);  // Couleur du trait
+  stroke(255, 255, 0);  // Couleur du trait
   strokeWeight(10);
 
+  if(CHEAT_MODE && temps > 1) // On rajoute une flamme dans la direction du mouvement
+  {
+
+  }  
+  
+    stroke(64, 64, 64);  // Couleur du trait
+  strokeWeight(10);
   if (GAME_STATE == INIT_LANCER)
     ellipse(0*SCALE, window_size_y-HAUTEUR_INITIALE*SCALE-HAUTEUR_SOL-5, 10, 10); 
 

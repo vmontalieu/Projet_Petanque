@@ -4,7 +4,6 @@ masse = 0.8; //kg
 gterre = 9.81;
 Te = 0.03 // 40ms
 
-
 // Conditions initiales
 theta = 60; // angle d'attaque. 
 pi = 3.14
@@ -12,7 +11,7 @@ theta = pi * (theta) / 180
 hauteur = 2; // hauteur initiale de la boule (m)
 v0 = 5; // m/s²
 epsilon = 1; // Epsilon, le coefficient des "reacteurs"
-
+size(T)
 v0x = v0*cos(theta);
 v0y = v0*sin(theta);
 
@@ -46,24 +45,29 @@ Xsuivant = X0;
 t = 0; // compteur de temps
 
 // On aura au final dans X toute la trajectoire de LunarLander
-//while Xsuivant(3) > 0 // Tant que la position en y est supérieure à 0 (pas encore par terre)
+while Xsuivant(3) > 0 // Tant que la position en y est supérieure à 0 (pas encore par terre)
                                  // vecteur a
-//    Xsuivant = Ad*Xsuivant + Bd*[0;-gterre];
-//    X = [X, Xsuivant]; // On ajoute la valeur à la matrice X
-//    t = t+1;    
-//end
+    Xsuivant = Ad*Xsuivant + Bd*[0;-gterre];
+    X = [X, Xsuivant]; // On ajoute la valeur à la matrice X
+    t = t+1;    
+end
+
+xn = X(1,:);
+yn = X(3,:);
+plot2d(xn, yn);
 
 /////////////////////////////////////////////////////// Gouvernabilité.
 
-X0=[0; v0x; hauteur; v0y];
+//X0=[0; v0x; hauteur; v0y];
+X0 = [0;2;2;10];
 // Faut trouver le bon V0x et le bon V0y pour bien partir
 
 // Point qu'on veut atteindre
 // x , vx , y , vy
-Xh  = [50;v0x;0;0]; 
-
+//Xh  = [20;v0x;0;-10];
+Xh = [5;2;0;-10];
 // MAtrice de gouvernabilité (de taille 1)
-h=30;
+h=10;
 // La différence sera dans Bd, matrice pour l'instant vide. 
 //On va changer les epsilon, et donc l'acceleration y
 G = Bd; 
@@ -93,7 +97,7 @@ size(G); // = 4x300
     a = u;
     //calcul de ay(n) = u(2*n)+glune/erg
     for n=1:h do
-        a(2*n) = a(2*n) - (gterre);
+        //a(2*n) = a(2*n) - (gterre);
         //a(n) = a(n)-gterre;
     end
 
@@ -106,14 +110,14 @@ Xsuivant = X0;
 
 t=1
 // On calcule les nouvelles coordonnées du truc
-for k=1:h-1 // Tant que la position en y est supérieure à 0 (pas encore par terre)
+for k=1:h // Tant que la position en y est supérieure à 0 (pas encore par terre)
                                  // vecteur U + a
     Xsuivant = Ad*Xsuivant + Bd*[a(k);a(2*k)];
     X = [X, Xsuivant]; // On ajoute la valeur à la matrice X
    // t = t+1;    
 end
 
-xn = X(1,:);
-yn = X(3,:);
-//plot2d(xn, yn);
-plot2d(xn,yn);
+xn2 = X(1,:);
+yn2 = X(3,:);
+plot2d(xn2, yn2);
+//plot2d(xn,yn);

@@ -1,4 +1,8 @@
-// Ici, on va simuler une chute libre sans puis avec vitesse initiale et angle
+// Commande Manuelle
+// Maxime Touroute
+// Nicolas Sintes
+// Vincent Montalieu
+// Avril 2015
 
 masse = 0.8; //kg
 gterre = 9.81;
@@ -27,15 +31,16 @@ B= [0,0 ; epsilon,0 ; 0,0 ; 0,epsilon];
 C=  eye(4,4); // La matrice identité 4x4.
 D= zeros(4,2);
 
-equation = syslin('c', A, B, C, D); //  
-equationdisc = dscr(equation, Te); // On discretise..
 
-Ad = equationdisc('A'); // On récupère A discrétisé pour l'équation
-Bd = equationdisc('B'); // Idem pour B.
+// Discretisation 
 
-X = []; //
-X = X0; // conditions initiales.
+equation = syslin('c', A, B, C, D); 
+equationdisc = dscr(equation, Te); 
+Ad = equationdisc('A');
+Bd = equationdisc('B'); 
 
+X = [];
+X = X0;
 Xsuivant = [];
 Xsuivant = X0;
 
@@ -45,7 +50,8 @@ t = 0; // compteur de temps
 while Xsuivant(3) > 0 // Tant que la position en y est supérieure à 0 (pas encore par terre)
                                  // vecteur a
     Xsuivant = Ad*Xsuivant + Bd*[0;-gterre];
-    X = [X, Xsuivant]; // On ajoute la valeur à la matrice X
+    // On ajoute la valeur à la matrice X
+    X = [X, Xsuivant]; 
     t = t+1;    
 end
 

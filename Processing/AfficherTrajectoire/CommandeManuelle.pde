@@ -12,10 +12,11 @@ class CommandeManuelle
   float gterre = 9.81;
 
 
-  // Les deux vecteurs qui stockent les coordonnées de la trajectoire : limite de points imposée à 2000.
+  // Les deux vecteurs qui stockent les coordonnees de la trajectoire : limite de points imposee a 2000.
   float[] coordonnees_trajectoire_x = new float[2000];
   float[] coordonnees_trajectoire_y = new float[2000];
 
+  // Mêmes vecteurs, pour le mode triche (retour d'etat)
   float[] coordonnees_trajectoire_x_triche = new float[2000];
   float[] coordonnees_trajectoire_y_triche = new float[2000];
   
@@ -140,20 +141,18 @@ class CommandeManuelle
       }
     };
 
-    // Le X précédent
-    float[][] X = new float[4][1]; // Le X d'avant
-    
-    
-      X[0][0] = X0[0][0];
-      X[1][0] = X0[1][0];
-      X[2][0] = X0[2][0];
-      X[3][0] = X0[3][0];
+    // Le X précédent, qui est une copie de X0
+    float[][] X = new float[4][1];    
+    X[0][0] = X0[0][0];
+    X[1][0] = X0[1][0];
+    X[2][0] = X0[2][0];
+    X[3][0] = X0[3][0];
       
     // Stockage des premières valeurs
     coordonnees_trajectoire_x[0] = X[0][0]; // x
     coordonnees_trajectoire_y[0] = X[2][0]; // y
 
-    while ( X[2][0] > 0 ) // Tant que la position en y est supérieure à 0 (par encore par terre)
+    while ( X[2][0] > 0 ) // Tant que la position en y est supérieure à 0 (pas encore par terre)
     {
       // on réinitialise Xsuivant avant de ré-itérer la boucle
       Xsuivant[0][0] = 0;
@@ -197,11 +196,11 @@ class CommandeManuelle
 
   void compute_cheatmode()
   {
-    // En entrée, le vecteur X0 d'où on est.
-    //               x   vx   y   vy
+    // En entrée, le vecteur X0
+    // 
     float[][] XDebutTriche = {
       {
-        0
+        X0[0][0]
       }
       , {
         X0[1][0]
@@ -213,8 +212,12 @@ class CommandeManuelle
         X0[3][0]
       }
     }; 
+    
+    
     print("potision cochonnet:", position_cochonnet, "\n");
-    // On veut aller à 
+    
+    // Le vecteur à atteindre en fin de parcours
+    // TODO: trouver un moyen pour limiter l'impact des vitesses 
     float[][] Xh = {
       {
         position_cochonnet/SCALE
@@ -228,21 +231,19 @@ class CommandeManuelle
       , {
         -1
       }
-    };   // TODO: remplacer ça par la position du cochonnet
+    };   
 
     // en h étapes TODO: euh... jouer avec ça ?
     int h = 30;
 
     // Matrice de gouvernabilité : les premières valeurs c'est Bd
     // MAtrice 2x'4
-    //float[][] Bd = { {0.00045, 0},{0.03, 0},{0, 0.00045},{0, 0.03} }; 
 
     float[][] G = new float[4][2*h]; // G est une matrice contenant une liste de vecteurs 4 (sur chaque colonne) 
 
     //TODO: récupérer proprement les vraies valeurs de Bd parce que là merci bien
-    // Scilab: G = Bd
+    // Code Scilab: G = Bd
     //[ligne][colonne]
-    //
     G[0][(2*h)-2] = 0.00045;
     G[1][(2*h)-2] = 0.03;
     G[2][(2*h)-2] = 0;
@@ -255,7 +256,8 @@ class CommandeManuelle
 
 
     //Mat.print(G,5);
-    //*********************************************************** Calcul de la matrice de gouvernabilité
+    
+    /**************************** Calcul de la matrice de gouvernabilité *******************************/
 
     // Code Scilab
     /*
@@ -263,8 +265,10 @@ class CommandeManuelle
      G=[(Ad^k)*Bd,G]; // On 
      end*/
 
+    // Creation du Ad^k
     float[][] Adk = new float[4][4];
 
+    // Qu'on initialise à Ad
     for (int i = 0; i < 4; i++)
       for (int j = 0; j < 4; j++)
         Adk[i][j]=Ad[i][j];
@@ -272,16 +276,16 @@ class CommandeManuelle
     print("Adk initial\n");
     Mat.print(Adk, 5);
 
-    int indice_courant_de_G = (2*h)-3; // Indice où il faut écrire
+    // Indice colonne où il faut écrire la valeur (on remplit G à partir de la fin)
+    int indice_courant_de_G = (2*h)-3; 
 
     for (int k = 1; k < h; k++)
     {
       print("\n*************iteration", k, "\n");
 
-      // On multiplie Adk par Ad voilà. Testé OK (normalement)
+      // On multiplie Adk par Ad voilà.
       if (k != 1)
       {
-
         // Le Adk d'avant.
         float[][] prev_Adk = Adk;
 
@@ -312,14 +316,14 @@ class CommandeManuelle
 
       // Calcul de la matrice 4x2 à ajouter dans G : Testé OK
 
-      float[][] temp_G = new float[4][2]; // G est une matrice contenant une liste de vecteurs 4 (sur chaque colonne) 
+      float[][] temp_G = new float[4][2];
 
       for (int i = 0; i < 4; i++) // Les 4 lignes
       {
         for (int j = 0; j < 2; j++) // les 2 colonnes
         {
           float sum = 0;
-          // à chaque étape, on ajoute DEUX colonnes
+          
           for (int p = 0; p < 4; p++)
           {
             sum += Adk[i][p]*Bd[p][j];
@@ -332,7 +336,7 @@ class CommandeManuelle
       Mat.print(temp_G, 5);
 
       // Derniere etape: concatener la matrice temp_G à G.
-      // TODO: c'est vraimen bien fait ?
+
       for (int i = 0; i < 4; i++)
       {
         G[i][indice_courant_de_G] = temp_G[i][1];
@@ -348,22 +352,16 @@ class CommandeManuelle
       indice_courant_de_G--;
     }
 
-
+    // On a notre matrice de gouvernabilité.
+    
     print("final G\n");
     Mat.print(G, 5);
     
     
-    //* *************************** Jusqu'ici ça marche OMG ! ********************************************************/
-
-
-    //************************************************************************************************************************************************************************************************ Calcul de la solution
-    //*****************************************************************************************************************************************************************************************************************
-    /*
-    Code Scilab
-     y = Xh - (Ad^h) * X0; // y, le vecteur final qu'on veut atteindre ?
-     Gt = G'; // G' donne la transposée de G
-     u = (Gt * inv(G * Gt)) * y; 
-     */
+    /************************************************* Calcul de y ************************************/
+   // Code Scilab
+     //y = Xh - (Ad^h) * X0; // y, le vecteur final qu'on veut atteindre ?
+    
 
     float[][] y = { 
       {
@@ -386,8 +384,7 @@ class CommandeManuelle
     y[2][0] = Xh[2][0];
     y[3][0] = Xh[3][0];
 
-    // On reprend le Adk qui est à h maintenant? (ou peut-être qu'il manque 1 multiplication?)
-    // Adk devient Adh.
+    // On reprend Adk et on le multiplie par Ad une fois de + pour obtenir Ad^h
     {
 
       // Le Adk d'avant.
@@ -412,8 +409,8 @@ class CommandeManuelle
       }
     }
 
-    // * vecteur X0
-    // ad^h*X0
+
+    // Code Scilab: Ad^h*X0
     float[][] temp_result = { 
       {
         0
@@ -446,10 +443,16 @@ class CommandeManuelle
     y[3][0] -= temp_result[3][0];
 
     // On a y.
-
+    
     print("\ny\n");
-    Mat.print(y, 5)
-    ;
+    Mat.print(y, 5);
+    
+    /* Code Scilab 
+     Gt = G'; // G' donne la transposée de G
+     u = (Gt * inv(G * Gt)) * y; 
+     */
+     
+     // La transposée
     float[][] Gt = new float[2*h][4];
 
     for (int i = 0; i < 2*h; i++) // 2*h lignes dans la matrice transposée
@@ -459,9 +462,8 @@ class CommandeManuelle
     print("\nGt!\n");
     Mat.print(Gt, 5);
 
-    // Derniere etape: code scilab : u = (Gt * inv(G * Gt)) * y; 
+    // Derniere etape: le vecteur de commande qui remplacera notre a: u = (Gt * inv(G * Gt)) * y; 
 
-    // U, la matrice des vecteurs de commande qui remplacent a
     // Gt * inv(G * Gt)
 
     float[][] GxGt = new float[4][4];
@@ -470,8 +472,6 @@ class CommandeManuelle
     {
       for (int j = 0; j < 4; j++) // les 4 colonnes
       {
-        //java.math.BigDecimal sum = new java.math.BigDecimal("0");
-        // à chaque étape, 
         float sum = 0.0;
         for (int p = 0; p < 2*h; p++)
         {
@@ -481,16 +481,19 @@ class CommandeManuelle
       }
     }
 
-    // Bon jusqu'ici !!
+
 
     print("\nGxGt!\n");
     Mat.print(GxGt, 6);
-    // On fait l'inverse de ce truc infame (et dieu merci papaya le fait)
+    
+    // On fait l'inverse de la matrice avec une bibliotheque processing
 
     float[][] invGxGt = Mat.inverse(GxGt);
 
     print("\ninvGxGt!\n");
     Mat.print(invGxGt, 5);
+    
+    
     //  Gt*invGxGt
     float[][] GtxinvGxGt = new float[2*h][4];
 
@@ -510,9 +513,8 @@ class CommandeManuelle
 
     print("\nGtinvGxGt!\n");
     Mat.print(GtxinvGxGt, 5);
-    // ça marche !!
 
-    // Plus qu'à faire tout ça *y
+    // Plus qu'à multiplier ce terme par le vecteur y 
     float[][] u = new float[2*h][1];
 
     for (int i = 0; i < 2*h; i++) // Les 2*h lignes
@@ -526,19 +528,20 @@ class CommandeManuelle
       u[i][0] = sum;
     }
 
+    // On a notre vecteur de commande
     print("\nu!\n");
     Mat.print(u, 5);
 
-  // TODO: dire que là on a pas la rgavité hein ! si on la rajoute dans scilab faut aussi la rajouter ici
-
+  // On ajoute l'effet de la gravité (TODO, bêta.)
   for(int k = 0 ; k < h*2 ; k+=2)
   {
     u[k][0] -= gterre;
   } 
 
 
-    // ************************************************************************Plus qu'à balance
-        // Initialisation du prochain vecteur à calculer
+    /****************************************** Calcul de la nouvelle trajectoire ********************************************/
+    
+    // Initialisation du prochain vecteur à calculer
     float[][] Xsuivant = {  
       {
         0
@@ -557,19 +560,21 @@ class CommandeManuelle
       }
     };
     
-        // Le X précédent
+    // Le X précédent, qu'on initialise aux valeurs du premier point
     float[][] X = new float[4][1];
     
-   X[0][0] = XDebutTriche[0][0]; // Le X d'avant
-   X[1][0] = XDebutTriche[1][0]; // Le X d'avant
-   X[2][0] = XDebutTriche[2][0]; // Le X d'avant
-   X[3][0] = XDebutTriche[3][0]; // Le X d'avant
+   X[0][0] = XDebutTriche[0][0]; 
+   X[1][0] = XDebutTriche[1][0]; 
+   X[2][0] = XDebutTriche[2][0]; 
+   X[3][0] = XDebutTriche[3][0]; 
 
     // Stockage des premières valeurs
     coordonnees_trajectoire_x_triche[0] = X[0][0]; // x
     coordonnees_trajectoire_y_triche[0] = X[2][0]; // y
 
+    // On commence à l'instant temps
     instant_t = temps;
+    
     for(int k = 0 ; k < h ; k++) 
     {
       // on réinitialise Xsuivant avant de ré-itérer la boucle
@@ -594,12 +599,13 @@ class CommandeManuelle
       
       vecteur_commande[0][0] = u[k][0];
       
+      // On initialise le vecteur de commande qui remplace le vecteur a
       if(k != 0)
       vecteur_commande[1][0] = u[2*k][0];
       else
-      vecteur_commande[1][0] = u[1][0]; // Cas particulier TODO faire propre!
+      vecteur_commande[1][0] = u[1][0]; 
       
-      for (int i = 0; i < 4; i++) // ajout du terme Bd*a;
+      for (int i = 0; i < 4; i++) // ajout du terme Bd*u;
       {
         for (int j = 0; j < 2; j++)
         {
@@ -615,19 +621,19 @@ class CommandeManuelle
       X[3][0] = Xsuivant[3][0];
       
         
-    // Attention, ici maintenant on bosse avec le vrai temps ! du jeu ! eh ouais ! voir si on peut pas améliorer ça quand même..
-          // Stockage des nouvelles coordonnées de trajectoire
+   
+      // Stockage des nouvelles coordonnées de trajectoire
       coordonnees_trajectoire_x_triche[instant_t] = Xsuivant[0][0];
       coordonnees_trajectoire_y_triche[instant_t] = Xsuivant[2][0];
       
       print(coordonnees_trajectoire_x_triche[instant_t], ",");
       print(coordonnees_trajectoire_y_triche[instant_t], "\n");
       print("X a atteindre!", Xh[0][0], "\n");
+      
+      //TODO.
       //if ( X[2][0] > 0 ) // Tant que la position en y est supérieure à 0 (par encore par terre)
         //break;
     }
-    
-    
   }  // Fin  de méthode
   
   // TODO : convertir les X en matrices avec toutes les valeurs ? ou osef ?

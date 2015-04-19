@@ -1,4 +1,9 @@
-// Ici, on va simuler une chute libre sans puis avec vitesse initiale et angle
+// Commande à retour d'etat
+// Maxime Touroute
+// Nicolas Sintes
+// Vincent Montalieu
+// Avril 2015
+
 
 masse = 0.8; //kg
 gterre = 9.81;
@@ -28,16 +33,15 @@ C=  eye(4,4); // La matrice identité 4x4.
 D= zeros(4,2);
 
 
+// Discretisation 
 
-equation = syslin('c', A, B, C, D); //  
-equationdisc = dscr(equation, Te); // On discretise..
+equation = syslin('c', A, B, C, D); 
+equationdisc = dscr(equation, Te); 
+Ad = equationdisc('A');
+Bd = equationdisc('B'); 
 
-Ad = equationdisc('A'); // On récupère A discrétisé pour l'équation
-Bd = equationdisc('B'); // Idem pour B.
-
-X = []; //
-X = X0; // conditions initiales.
-
+X = [];
+X = X0;
 Xsuivant = [];
 Xsuivant = X0;
 
@@ -47,7 +51,8 @@ t = 0; // compteur de temps
 while Xsuivant(3) > 0 // Tant que la position en y est supérieure à 0 (pas encore par terre)
                                  // vecteur a
     Xsuivant = Ad*Xsuivant + Bd*[0;-gterre];
-    X = [X, Xsuivant]; // On ajoute la valeur à la matrice X
+    // On ajoute la valeur à la matrice X
+    X = [X, Xsuivant]; 
     t = t+1;    
 end
 
@@ -57,42 +62,34 @@ plot2d(xn, yn, style=[color("red")]);
 
 /////////////////////////////////////////////////////// Gouvernabilité.
 
-//X0=[0; v0x; hauteur; v0y];
-X0 = [0;2;2;10];
-// Faut trouver le bon V0x et le bon V0y pour bien partir
-
 // Point qu'on veut atteindre
 // x , vx , y , vy
 //Xh  = [20;v0x;0;-10];
 Xh = [5;2;0;-10];
-// MAtrice de gouvernabilité (de taille 1)
+
+// le choix du nombre de périodes d'échantillonnage
 h=10;
-// La différence sera dans Bd, matrice pour l'instant vide. 
-//On va changer les epsilon, et donc l'acceleration y
+
+// La matrice de gouvernabilité
 G = Bd; 
 
 // Calcul de la matrice de gouvernabilité
-// On calcule la trajectoire en fait si on touche à rien?
 for k=1:h-1
-    G=[(Ad^k)*Bd,G]; // On 
+    G=[(Ad^k)*Bd,G];
     end
 
-rank(G); // = 4 lignes. Si c'est différent de 4, alors pas de solution.
-
-size(G); // = 4x300
-
-
 // On a l'équiation y = G*U // G 4x300, U 300x1.
-// U c'est la liste des commandes qu'on applique successivement à l'entrée de la boule de pétanque (au niveau de la gravité quoi)
+// U c'est la liste des commandes qu'on applique successivement à l'entrée de la boule de pétanque
 // Il faut trouver U
 
     // Calcul de la solution
-    y = Xh - (Ad^h) * X0; // y, le vecteur final qu'on veut atteindre ?
+    y = Xh - (Ad^h) * X0; 
     Gt = G'; // G' donne la transposée de G
     u = (Gt * inv(G * Gt)) * y; 
     // Size(G*Gt) renvoit 4x4
 
-    // vecteur des commandes des réacteurs
+    // Creation d'un nouveau vecteur des commandes des réacteurs
+    // TODO: on en fait quoi de cette gravité?
     a = u;
     //calcul de ay(n) = u(2*n)+glune/erg
     for n=1:h do
@@ -107,18 +104,15 @@ X = X0; // conditions initiales.
 Xsuivant = [];
 Xsuivant = X0;
 
-t=1
-// On calcule les nouvelles coordonnées du truc
-for k=1:h // Tant que la position en y est supérieure à 0 (pas encore par terre)
-                                 // vecteur U + a
+
+// On calcule les nouvelles coordonnées de la trajectoire
+for k=1:h 
     Xsuivant = Ad*Xsuivant + Bd*[a(k);a(2*k)];
-    X = [X, Xsuivant]; // On ajoute la valeur à la matrice X
-   // t = t+1;    
+    // On ajoute la valeur à la matrice X
+    X = [X, Xsuivant];    
 end
 
 xn2 = X(1,:);
 yn2 = X(3,:);
 
 plot2d(xn2, yn2,style=[color("green")]);
-
-//plot2d(xn,yn);

@@ -83,7 +83,7 @@ void update_game()
 
 
 
-    if (position_boule_y <= 0 ) // Si fin de la trajectoire, fin de la partie
+    if ( (!CHEAT_MODE && position_boule_y <= 0) || (CHEAT_MODE && temps > commande_manuelle.valeur_h) ) // Si fin de la trajectoire, fin de la partie
     {
       //TODO: interpollation à faire ici ?
 

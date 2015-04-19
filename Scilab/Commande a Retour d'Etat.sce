@@ -1,4 +1,4 @@
-// Commande à retour d'etat
+// Projet Petanque - Commande à retour d'etat
 // Maxime Touroute
 // Nicolas Sintes
 // Vincent Montalieu
@@ -10,7 +10,7 @@ gterre = 9.81;
 Te = 0.03 // 40ms
 
 // Conditions initiales
-theta = 60; // angle d'attaque. 
+theta = 60; // angle du lancer
 pi = 3.14
 theta = pi * (theta) / 180 
 hauteur = 2; // hauteur initiale de la boule (m)
@@ -65,10 +65,10 @@ plot2d(xn, yn, style=[color("red")]);
 // Point qu'on veut atteindre
 // x , vx , y , vy
 //Xh  = [20;v0x;0;-10];
-Xh = [5;2;0;-10];
+Xh = [20;0;0;0];
 
 // le choix du nombre de périodes d'échantillonnage
-h=10;
+h=100;
 
 // La matrice de gouvernabilité
 G = Bd; 
@@ -89,12 +89,10 @@ for k=1:h-1
     // Size(G*Gt) renvoit 4x4
 
     // Creation d'un nouveau vecteur des commandes des réacteurs
-    // TODO: on en fait quoi de cette gravité?
     a = u;
     //calcul de ay(n) = u(2*n)+glune/erg
     for n=1:h do
         //a(2*n) = a(2*n) - (gterre);
-        //a(n) = a(n)-gterre;
     end
 
 

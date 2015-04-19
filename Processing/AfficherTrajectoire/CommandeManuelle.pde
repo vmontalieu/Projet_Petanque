@@ -1,8 +1,7 @@
-
-
-
 /*
-Gestion de la commande manuelle
+Gestion de la commande manuelle et de la commande par retour d'état (mode triche)
+  * 18/04/2015
+  * Maxime Touroute
  */
 class CommandeManuelle
 {
@@ -10,7 +9,9 @@ class CommandeManuelle
   // Variables de conditions initiales
   float masse = 0.8;
   float gterre = 9.81;
-
+  
+  // L'horizon pour la boucle ouverte
+  int valeur_h = 50;
 
   // Les deux vecteurs qui stockent les coordonnees de la trajectoire : limite de points imposee a 2000.
   float[] coordonnees_trajectoire_x = new float[2000];
@@ -220,21 +221,21 @@ class CommandeManuelle
     // TODO: trouver un moyen pour limiter l'impact des vitesses 
     float[][] Xh = {
       {
-        position_cochonnet/SCALE
-      }
-      , {
-        1
+        5
       }
       , {
         0
       }
       , {
-        -1
+        0
+      }
+      , {
+        0
       }
     };   
 
-    // en h étapes TODO: euh... jouer avec ça ?
-    int h = 30;
+    // en h étapes TODO: euh... jouer avec ça ? Non.
+    int h = valeur_h;
 
     // Matrice de gouvernabilité : les premières valeurs c'est Bd
     // MAtrice 2x'4
@@ -535,7 +536,7 @@ class CommandeManuelle
   // On ajoute l'effet de la gravité (TODO, bêta.)
   for(int k = 0 ; k < h*2 ; k+=2)
   {
-    u[k][0] -= gterre;
+    //u[k][0] -= gterre;
   } 
 
 

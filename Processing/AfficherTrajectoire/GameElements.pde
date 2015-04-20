@@ -22,7 +22,7 @@ float HAUTEUR_INITIALE = 1.0;
 
 PImage background_img;
 int temps = 0;
-CommandeManuelle commande_manuelle = new CommandeManuelle();
+Commande commande = new Commande();
 
 
 

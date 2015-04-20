@@ -64,26 +64,28 @@ void update_game()
     // On avance dans le déplacement
     temps++;
 
-    if (commande_manuelle.coordonnees_trajectoire_y[temps] <= 0) commande_manuelle.coordonnees_trajectoire_y[temps] = 0; // on arrondit le y.
+    if (commande.coordonnees_trajectoire_y[temps] <= 0) commande.coordonnees_trajectoire_y[temps] = 0; // on arrondit le y.
 
     // Update de la position courante de la boule
-    if(CHEAT_MODE)
+    if(CHEAT_MODE && temps <= commande.instant_fin_commande_triche)
     {
-      position_boule_x = commande_manuelle.coordonnees_trajectoire_x_triche[temps];
-      position_boule_y = commande_manuelle.coordonnees_trajectoire_y_triche[temps];
       
-      print("BOULE : x",commande_manuelle.coordonnees_trajectoire_x_triche[temps] ,"y",commande_manuelle.coordonnees_trajectoire_y_triche[temps] ,"\n");
-    } else
+      position_boule_x = commande.coordonnees_trajectoire_x_triche[temps];
+      position_boule_y = commande.coordonnees_trajectoire_y_triche[temps];
+      
+      print("BOULE : x",commande.coordonnees_trajectoire_x_triche[temps] ,"y",commande.coordonnees_trajectoire_y_triche[temps] ,"\n");
+      
+    } else if (!CHEAT_MODE)
     {
-      position_boule_x = commande_manuelle.coordonnees_trajectoire_x[temps];
-      position_boule_y = commande_manuelle.coordonnees_trajectoire_y[temps];
+      position_boule_x = commande.coordonnees_trajectoire_x[temps];
+      position_boule_y = commande.coordonnees_trajectoire_y[temps];
     }
 
-    // Normalisation de position_boule
 
 
 
-    if ( (!CHEAT_MODE && position_boule_y <= 0) || (CHEAT_MODE && temps > commande_manuelle.valeur_h) ) // Si fin de la trajectoire, fin de la partie
+
+    if ( (!CHEAT_MODE && position_boule_y <= 0) || (CHEAT_MODE && temps > commande.instant_fin_commande_triche) ) // Si fin de la trajectoire, fin de la partie
     {
       //TODO: interpollation à faire ici ?
 
@@ -91,9 +93,12 @@ void update_game()
       score =  int(100* (1 - ( abs(position_cochonnet - position_boule_x*SCALE)/window_size_x ))); //TODO: buggé
       play_score_fx();
 
-      //draw_game(); // Dessine une dernière fois la scène
+      draw_game(); // Dessine une dernière fois la scène
+      // Todo: remplacer par un dessin final de scene
+      
       GAME_STATE = END_GAME;
     }
+    
   } else if (GAME_STATE == END_GAME)
   {
   }

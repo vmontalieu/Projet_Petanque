@@ -1,9 +1,9 @@
 /*
-Gestion de la commande manuelle et de la commande par retour d'état (mode triche)
+Gestion de la commande manuelle et de la commande par boucle ouverte (le mode triche)
   * 18/04/2015
   * Maxime Touroute
  */
-class CommandeManuelle
+class Commande
 {
 
   // Variables de conditions initiales
@@ -12,16 +12,26 @@ class CommandeManuelle
   
   // L'horizon pour la boucle ouverte
   int valeur_h = 50;
-
-  // Les deux vecteurs qui stockent les coordonnees de la trajectoire : limite de points imposee a 2000.
+  
+  // Stockage du nombre d'echantillons traites dans chaque cas
+  int instant_fin_commande_manuelle;
+  int instant_fin_commande_triche;
+  
+  // Stockage des donnees de trajectoire: coordonnees x et y, vitesse x et y
+  // Stockees dans des tableaux a taille fixe. Limite imposee a 2000
+  
+  // Les deux vecteurs qui stockent les coordonnees de la trajectoire 
   float[] coordonnees_trajectoire_x = new float[2000];
   float[] coordonnees_trajectoire_y = new float[2000];
 
-  // Mêmes vecteurs, pour le mode triche (retour d'etat)
+  // Mêmes vecteurs, pour le mode triche (La boucle ouverte)
   float[] coordonnees_trajectoire_x_triche = new float[2000];
   float[] coordonnees_trajectoire_y_triche = new float[2000];
   
-
+  // On stocke la vitesse de la boule a chaque instant
+  float[] vitesse_trajectoire_x = new float[2000];
+  float[] vitesse_trajectoire_y = new float[2000];
+  
   // L'instant t d'execution
   int instant_t = 0;
 
@@ -63,7 +73,7 @@ class CommandeManuelle
     }
   }; 
 
-  // Vecteur a
+  // Le vecteur de commande
   float[][] a = { 
     {
       0
@@ -142,7 +152,7 @@ class CommandeManuelle
       }
     };
 
-    // Le X précédent, qui est une copie de X0
+    // Le X précédent, qui est une copie du vecteur initial X0
     float[][] X = new float[4][1];    
     X[0][0] = X0[0][0];
     X[1][0] = X0[1][0];
@@ -191,7 +201,14 @@ class CommandeManuelle
       // Stockage des nouvelles coordonnées de trajectoire
       coordonnees_trajectoire_x[instant_t] = Xsuivant[0][0];
       coordonnees_trajectoire_y[instant_t] = Xsuivant[2][0];
+      // Stockage de la vitesse
+      vitesse_trajectoire_x[instant_t] = Xsuivant[1][0];
+      vitesse_trajectoire_y[instant_t] = Xsuivant[3][0];
+      
     }
+    
+    // On stocke le nombre d'échantillons créés
+    instant_fin_commande_manuelle = instant_t;
   }
 
 
@@ -218,19 +235,18 @@ class CommandeManuelle
     print("potision cochonnet:", position_cochonnet, "\n");
     
     // Le vecteur à atteindre en fin de parcours
-    // TODO: trouver un moyen pour limiter l'impact des vitesses 
     float[][] Xh = {
       {
-        5
+        5 // TODO: trouver la bonne position du cochonnet
+      }
+      , {
+        -5
       }
       , {
         0
       }
       , {
-        0
-      }
-      , {
-        0
+        -10
       }
     };   
 
@@ -245,17 +261,18 @@ class CommandeManuelle
     //TODO: récupérer proprement les vraies valeurs de Bd parce que là merci bien
     // Code Scilab: G = Bd
     //[ligne][colonne]
-    G[0][(2*h)-2] = 0.00045;
-    G[1][(2*h)-2] = 0.03;
-    G[2][(2*h)-2] = 0;
-    G[3][(2*h)-2] = 0;
+    G[0][(2*h)-2] = Bd[0][0];//0.00045;
+    G[1][(2*h)-2] = Bd[1][0];//0.03;
+    G[2][(2*h)-2] = Bd[2][0];//0;
+    G[3][(2*h)-2] = Bd[3][0];//0;
 
-    G[0][(2*h)-1] = 0;
-    G[1][(2*h)-1] = 0;
-    G[2][(2*h)-1] = 0.00045;
-    G[3][(2*h)-1] = 0.03;
+    G[0][(2*h)-1] = Bd[0][1];//0;
+    G[1][(2*h)-1] = Bd[1][1];//0;
+    G[2][(2*h)-1] = Bd[2][1];//0.00045;
+    G[3][(2*h)-1] = Bd[3][1];//0.03;
 
-
+  
+  
     //Mat.print(G,5);
     
     /**************************** Calcul de la matrice de gouvernabilité *******************************/
@@ -533,11 +550,6 @@ class CommandeManuelle
     print("\nu!\n");
     Mat.print(u, 5);
 
-  // On ajoute l'effet de la gravité (TODO, bêta.)
-  for(int k = 0 ; k < h*2 ; k+=2)
-  {
-    //u[k][0] -= gterre;
-  } 
 
 
     /****************************************** Calcul de la nouvelle trajectoire ********************************************/
@@ -573,17 +585,18 @@ class CommandeManuelle
     coordonnees_trajectoire_x_triche[0] = X[0][0]; // x
     coordonnees_trajectoire_y_triche[0] = X[2][0]; // y
 
-    // On commence à l'instant temps
+    // On commence à l'instant temps (Qui normalement est 0 hein TODO on gere ou pas?)
     instant_t = temps;
     
-    for(int k = 0 ; k < h ; k++) 
+    for(int k = 0 ; k < 2*h ; k+=2) 
     {
       // on réinitialise Xsuivant avant de ré-itérer la boucle
       Xsuivant[0][0] = 0;
       Xsuivant[1][0] = 0;
       Xsuivant[2][0] = 0;
       Xsuivant[3][0] = 0;
-
+      
+      // On incrémente l'instant t
       instant_t++;
 
       // Produit matriciel inspiré de celui du code Scilab
@@ -601,10 +614,9 @@ class CommandeManuelle
       vecteur_commande[0][0] = u[k][0];
       
       // On initialise le vecteur de commande qui remplace le vecteur a
-      if(k != 0)
-      vecteur_commande[1][0] = u[2*k][0];
-      else
-      vecteur_commande[1][0] = u[1][0]; 
+      //if(k != 0)
+      vecteur_commande[1][0] = u[k+1][0];
+   
       
       for (int i = 0; i < 4; i++) // ajout du terme Bd*u;
       {
@@ -631,10 +643,14 @@ class CommandeManuelle
       print(coordonnees_trajectoire_y_triche[instant_t], "\n");
       print("X a atteindre!", Xh[0][0], "\n");
       
-      //TODO.
-      //if ( X[2][0] > 0 ) // Tant que la position en y est supérieure à 0 (par encore par terre)
-        //break;
+      // Stockage de la vitesse
+      vitesse_trajectoire_x[instant_t] = Xsuivant[1][0];
+      vitesse_trajectoire_y[instant_t] = Xsuivant[3][0];
+    
     }
+    
+    // On stocke l'instant de fin
+    instant_fin_commande_triche = instant_t;
   }  // Fin  de méthode
   
   // TODO : convertir les X en matrices avec toutes les valeurs ? ou osef ?

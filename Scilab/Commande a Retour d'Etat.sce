@@ -6,6 +6,7 @@
 
 
 masse = 0.8; //kg
+masse = 1;
 gterre = 9.81;
 Te = 0.03 // 40ms
 
@@ -88,12 +89,7 @@ for k=1:h-1
     u = (Gt * inv(G * Gt)) * y; 
     // Size(G*Gt) renvoit 4x4
 
-    // Creation d'un nouveau vecteur des commandes des réacteurs
-    a = u;
-    //calcul de ay(n) = u(2*n)+glune/erg
-    for n=1:h do
-        //a(2*n) = a(2*n) - (gterre);
-    end
+
 
 
 X = []; //
@@ -104,10 +100,11 @@ Xsuivant = X0;
 
 
 // On calcule les nouvelles coordonnées de la trajectoire
-for k=1:h 
-    Xsuivant = Ad*Xsuivant + Bd*[a(k);a(2*k)];
+for k=1:2:2*h
+    Xsuivant = Ad*Xsuivant + Bd*[u(k);u(k+1)];
     // On ajoute la valeur à la matrice X
     X = [X, Xsuivant];    
+    
 end
 
 xn2 = X(1,:);

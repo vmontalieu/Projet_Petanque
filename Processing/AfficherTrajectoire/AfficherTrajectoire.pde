@@ -48,7 +48,6 @@ void keyPressed() {
   {
     if (key == 'x') {
       init_game();
-
     }
   } 
   else if (GAME_STATE == INIT_LANCER) {
@@ -77,11 +76,11 @@ void keyPressed() {
 
     if (key == ' ') // Lancer la boule
     {
-      commande_manuelle = new CommandeManuelle();
-      commande_manuelle.set_conditions_initiales(player_force, player_angle_dattaque);
-      commande_manuelle.compute_trajectoire();
+      commande = new Commande();
+      commande.set_conditions_initiales(player_force, player_angle_dattaque);
+      commande.compute_trajectoire();
       
-      commande_manuelle.compute_cheatmode(); 
+      commande.compute_cheatmode(); 
       CHEAT_MODE = true;
       
       

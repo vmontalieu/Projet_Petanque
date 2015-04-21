@@ -1,6 +1,6 @@
 /* Données de fenêtre et d'affichage 
- * 18/03/2015
  * Maxime Touroute
+ * Avril 2015
  */
 
 

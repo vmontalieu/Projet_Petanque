@@ -1,56 +1,61 @@
-/* Toutes les méthodes de dessin sont réunies ici
+/*
+  * Les méthodes de dessin du jeu
+ * Maxime Touroute
+ * Nicolas Sintes
+ * Vincent Montalieu
+ * Avril 2015
  */
 
+// Un compteur pour des effets animés
 float compteur_dessin = 1;
+float seconde = 0;
 
-
-
+/*
+Dessin de l'ecran d'accueil
+ */
 void draw_menu()
 {
 
-  float cl = sin(compteur_dessin);
-  compteur_dessin+=0.02;
+  float cl = sin(compteur_dessin/40);
+  compteur_dessin++;
 
-  background(200+cl*100, 200+cl*50, 200+cl*50);
+  if (compteur_dessin % int(framerate/3) == 0) seconde++;
+
+  background(200+cl*100, 200+cl*80, 200+cl*10);
 
   image(menu_img, 0, 0);
-  noFill(); 
-  stroke(255, 255, 255);
-  fill(255);
-  stroke(4);
+
+  if (seconde % 2 == 0) image(menu_x, 0, 0);
 }
 
+/*
+Dessin du jeu
+ */
 void draw_game()
 {
-  // Le départ de lancement de la boule
+  // Le dessin du jeu depend de l'etat dans lequel est le jeu (GAME_STATE)
+
+  // INIT_LANCER : la boule n'a pas encore ete lancee
   if (GAME_STATE == INIT_LANCER)
   {
 
     background(background_img);
-
-
     drawSpeedVector();
     draw_boule();
     draw_cochonnet();
-
-
     draw_legende();
     draw_texts();
   }
 
-  // La boule est lancée
+  // La boule est en vol
   else if (GAME_STATE == LANCER_BOULE)
   {
     background(background_img);
-
-
-
     draw_trajectoire();
 
     if (CHEAT_MODE)
     {
       draw_trajectoire_triche();
-
       if (temps < commande.instant_fin_commande_triche)
         draw_reacteurs();
     }
@@ -61,23 +66,21 @@ void draw_game()
 
     draw_legende();
     draw_texts();
-  } else if (GAME_STATE == END_GAME) // Fin du jeu, Afficher du texte, proposer de recommencer
+  }
+  // STATE : Fin du jeu: affichage du score
+  else if (GAME_STATE == END_GAME) 
   { 
-
-    //draw_legende();
-
-    
-
-    if (compteur_dessin < 10) fill(255,0,0);
+    // Petit effet de couleur clignotante sur le score
+    if (compteur_dessin < 10) fill(255, 0, 0);
     else if (compteur_dessin >= 10 && compteur_dessin < 20) fill(0);
-    else if (compteur_dessin < 30) fill(255,0,0);
+    else if (compteur_dessin < 30) fill(255, 0, 0);
     else fill(0);
-    // stroke(4);
+
     compteur_dessin+=7;
 
     textSize(60);
     textAlign(CENTER, CENTER);
-    // TODO : affiner le réglage du out of bounds : apparait même si la boule est encore un peu à l'écran
+
     if (position_boule_x*SCALE < window_size_x)
     {
       text("SCORE:" + int(score) + "%", 400, 120);
@@ -85,8 +88,6 @@ void draw_game()
     {
       text("OUT OF BOUNDS !", 400, 120);
     }
-
-
 
     fill(0, 0, 0);
     textSize(25);
@@ -96,12 +97,13 @@ void draw_game()
   }
 }
 
-
+/*
+Dessine la trajectoire de la boule
+ */
 void draw_trajectoire()
 {
 
-
-  //TODO bug
+  // Affichage de la trajectoire au fur et a mesure de l'avancement de la boule
   for (int i = 0; (!CHEAT_MODE && i < temps) || (CHEAT_MODE && ( ( i < temps && i < commande.instant_fin_commande_manuelle ) || (i >= commande.instant_fin_commande_triche && i < commande.instant_fin_commande_manuelle) )  ); i++)
   {
     // Dessin de la ligne
@@ -118,10 +120,11 @@ void draw_trajectoire()
   }
 }
 
+/*
+Dessine la trajectoire de la boule en cas de triche
+ */
 void draw_trajectoire_triche()
 {
-
-
   // On fait ici attention de ne pas deborder sur la fin de trajectoire
   for (int i = 0; i < temps && i < commande.instant_fin_commande_triche; i++)
   {
@@ -146,20 +149,18 @@ Dessine la boule
  */
 void draw_boule()
 {
-
-
-  stroke(80,80,80);  // Couleur du trait
+  stroke(80, 80, 80);  // Couleur du trait
   strokeWeight(2);
-  fill(80,80,80);
+  fill(80, 80, 80);
+
   if (GAME_STATE == INIT_LANCER)
     ellipse(0*SCALE, window_size_y-HAUTEUR_INITIALE*SCALE-HAUTEUR_SOL-6, 20, 20); 
-
   else
     ellipse(position_boule_x*SCALE, window_size_y-position_boule_y*SCALE-HAUTEUR_SOL-6, 20, 20);
 }
 
 /*
-Dessine une flamme derriere la boule
+Dessine des vecteurs de poussee autour de la boule
  */
 void draw_reacteurs()
 {
@@ -174,12 +175,6 @@ void draw_reacteurs()
 
   drawArrow( (int) (position_boule_x*SCALE), (int) ( window_size_y-position_boule_y*SCALE-HAUTEUR_SOL-5 ), 
   (int) ( (position_boule_x*SCALE) + 50*commande.vitesse_trajectoire_x[temps] ), (int) ( window_size_y-position_boule_y*SCALE-HAUTEUR_SOL-5 ) );
-
-  /* triangle( (position_boule_x*SCALE)+2, window_size_y-position_boule_y*SCALE-HAUTEUR_SOL, 
-   (position_boule_x*SCALE)-2, window_size_y-position_boule_y*SCALE-HAUTEUR_SOL, 
-   
-   (position_boule_x*SCALE) - commande.vitesse_trajectoire_x[temps], 
-   (window_size_y-position_boule_y*SCALE-HAUTEUR_SOL)+commande.vitesse_trajectoire_y[temps]);*/
 }
 
 
@@ -252,24 +247,11 @@ void draw_texts()
     text("Strengh : " + nf(player_force, 1, 1) + "m/s", 20, 120);
     text("Angle    : " + int(player_angle_dattaque) + "°", 20, 140); 
 
-
-    /*
-    int x = 20, y=90;
-     stroke(100);
-     strokeWeight(2); //Epaisseur du trait
-     line(x,y,x,y+5);
-     line(x,y+5,x+(nombre_lancers-1)*30,y+5);
-     line(x+(nombre_lancers-1)*30,y+5,x+(nombre_lancers-1)*30,y);
-     */
+    // Le nombre de balles restantes
     fill(64);
     strokeWeight(0); //Epaisseur du trait
     for (int i = 0; i < lancers_restants; i++)
       ellipse(95+15*i, 95, 10, 10);
-
-
-
-
-
 
 
     textAlign(LEFT);
@@ -292,4 +274,6 @@ void draw_legende()
 {
   image(legende_img, 0, 0);
 }
+
+
 

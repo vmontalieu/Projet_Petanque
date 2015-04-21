@@ -1,3 +1,5 @@
+import papaya.*;
+
 /*
 Gestion de la commande manuelle et de la commande par boucle ouverte (le mode triche)
   * 18/04/2015
@@ -246,7 +248,7 @@ class Commande
         0
       }
       , {
-         0
+         -5 // Pour éviter que la balle arrive par sous-terre
       }
     };   
 

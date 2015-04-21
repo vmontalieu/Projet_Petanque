@@ -1,4 +1,4 @@
-import papaya.*;
+
 
 
 /* Le Coeur du programme. draw et keyPressed s'executent en boucle */

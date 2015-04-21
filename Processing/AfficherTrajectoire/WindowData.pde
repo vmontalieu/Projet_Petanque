@@ -10,5 +10,5 @@ int window_size_y = 450;
 int framerate = 30;
 
 // Valeur d'échelle pour la conversion repère réel - repère fenêtre
-int SCALE = 100;
+int SCALE = 80;
 

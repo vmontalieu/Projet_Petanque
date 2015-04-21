@@ -9,7 +9,6 @@ int INIT_LANCER = 3; // Moment où on choisit la vitesse et l'angle d'attaque
 int LANCER_BOULE = 4; // Moment où la boule est lancée
 int END_GAME = 10; // Moment où la boule est lancée
 
-
 boolean CHEAT_MODE = false;
 
 // La hauteur du sol
@@ -39,7 +38,7 @@ float player_force = 0;
 float player_angle_dattaque = 0;
 float position_boule_x;
 float position_boule_y;
-int score;
+float score;
 
 float position_cochonnet;
 

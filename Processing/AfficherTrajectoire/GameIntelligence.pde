@@ -62,9 +62,8 @@ void init_boule()
 
 void init_cochonnet()
 {
-  position_cochonnet = random( 1, 7);
-  
-  
+  position_cochonnet = random( 3, 10);
+
 }
 
 void update_game()
@@ -106,16 +105,22 @@ void update_game()
 
       // Update the score
       float distance_max = 7;
-      float distance = abs(position_cochonnet/SCALE - position_boule_x);
+      float distance = abs(position_cochonnet - position_boule_x);
+      score = 0;
 
-      float score =  100*((distance/distance_max));
-      print(score + "\n");
+      if(distance/distance_max < 1) score = 100 -  100*((distance/distance_max));
+      if(score > 98) score = 100;
+      
+      print("boule", position_boule_x, "cochonnet", position_cochonnet , "score" , score , "\n");
      // score =  int(100* (8 - ( abs(position_cochonnet - position_boule_x )))); 
       play_score_fx();
 
       draw_game(); // Dessine une dernière fois la scène
       
       GAME_STATE = END_GAME;
+      compteur_dessin = 0;
+      
+      
     }
     
   } else if (GAME_STATE == END_GAME)

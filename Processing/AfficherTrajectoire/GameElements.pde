@@ -10,7 +10,6 @@ int LANCER_BOULE = 4; // Moment où la boule est lancée
 int END_GAME = 10; // Moment où la boule est lancée
 
 
-
 boolean CHEAT_MODE = false;
 
 // La hauteur du sol
@@ -18,10 +17,19 @@ int HAUTEUR_SOL = 65;
 // La hauteur initiale du lancer
 float HAUTEUR_INITIALE = 1.0;
 
+
+// Le nombre de tentatives pour chaque lancer
+int nombre_lancers = 3;
+int lancers_restants = 0;
+
 /************ Données du jeu ************/
 
 PImage background_img;
-int temps = 0;
+PImage legende_img;
+PImage menu_img;
+
+int temps=0;
+
 Commande commande = new Commande();
 
 
@@ -33,7 +41,7 @@ float position_boule_x;
 float position_boule_y;
 int score;
 
-int position_cochonnet;
+float position_cochonnet;
 
 /**************************************/
 

@@ -1,14 +1,46 @@
 /* Toutes les méthodes de dessin sont réunies ici
  */
 
+float compteur = 1;
+
+
+  
+  
 void draw_menu()
 {
 
-  background(224, 224, 224);
+  float cl = sin(compteur);
+  compteur+=0.01;
+  
+  background(200+cl*50,200+cl*50,200+cl*100);
+  
+  image(menu_img, 0, 0);
+  noFill(); 
+  stroke(255,255,255);
+  fill(255);
+  stroke(4);
+
+/*
+    for(int i = 0; i < out.bufferSize() - 1; i++)
+  {
+    line( i, 50 + out.left.get(i)*50, i+1, 50 + out.left.get(i+1)*50 );
+    line( i, 150 + out.right.get(i)*50, i+1, 150 + out.right.get(i+1)*50 );
+  }*/
+  
+ /* for(int i = 0 ; i < compteur ; i++)
+  {
+    ellipse(window_size_x/2, window_size_y/2, i*10, i*10); 
+  }
+  compteur++;
+  */ 
+  
+
+/*
+
+  fill(0,0,0);
   textSize(64);
   textAlign(CENTER, CENTER);
-  text("Projet Petanque", 400, 200); 
-  fill(0, 0, 0);
+  text("Petanque Project", 400, 200); 
 
   textSize(32);
   textAlign(CENTER, BOTTOM);
@@ -21,7 +53,9 @@ void draw_menu()
   text("Nicolas Sintes, Maxime Touroute and Vincent Montalieu", 400, 30);
   textSize(20);
   text("presents", 400, 55); 
-  fill(0, 0, 0);
+  fill(0, 0, 0);*/
+  
+
 }
 
 void draw_game()
@@ -32,10 +66,13 @@ void draw_game()
 
     background(background_img);
 
-    draw_texts();
+    
     drawSpeedVector();
     draw_cochonnet();
     draw_boule();
+    
+    draw_legende();
+    draw_texts();
   }
 
   // La boule est lancée
@@ -43,26 +80,35 @@ void draw_game()
   {
     background(background_img);
 
-    draw_texts();
+    
     draw_cochonnet();
     draw_trajectoire();
 
     if (CHEAT_MODE)
     {
       draw_trajectoire_triche();
+      
+      if(temps < commande.instant_fin_commande_triche)
       draw_reacteurs();
     }
 
     drawSpeedVector();
     draw_boule();
+    
+    draw_legende();
+    draw_texts();
+    
   } else if (GAME_STATE == END_GAME) // Fin du jeu, Afficher du texte, proposer de recommencer
-  {   
+  { 
+    
+    //draw_legende();
+    
     textSize(60);
     textAlign(CENTER, CENTER);
     // TODO : affiner le réglage du out of bounds : apparait même si la boule est encore un peu à l'écran
     if (position_boule_x*SCALE < window_size_x)
     {
-      text("SCORE:" + score + "%", 400, 120);
+      text("SCORE:" + nf(score,1,0) + "%", 400, 120);
     } else
     {
       text("OUT OF BOUNDS !", 400, 120);
@@ -83,8 +129,8 @@ void draw_trajectoire()
 {
 
 
-
-  for (int i = 0; i < temps && i < commande.instant_fin_commande_manuelle; i++)
+   //TODO bug
+  for (int i = 0; (!CHEAT_MODE && i < temps) || (CHEAT_MODE && i < temps && i < commande.instant_fin_commande_manuelle-1); i++)
   {
     // Dessin de la ligne
     stroke(204, 0, 0);  // Couleur du trait
@@ -144,17 +190,19 @@ Dessine une flamme derriere la boule
  */
 void draw_reacteurs()
 {
-  stroke(200, 200, 0);  // Couleur du trait
-  strokeWeight(5);
+
+  strokeWeight(4);
+  stroke(255,150,58);
+  fill(255,0,0);
 
   //ellipse(0*SCALE, window_size_y-HAUTEUR_INITIALE*SCALE-HAUTEUR_SOL-5, 10, 10); 
   drawArrow( (int) (position_boule_x*SCALE),(int) ( window_size_y-position_boule_y*SCALE-HAUTEUR_SOL-5 ),
-              (int) (position_boule_x*SCALE), (int) ( (window_size_y-position_boule_y*SCALE-HAUTEUR_SOL-5)+10*commande.vitesse_trajectoire_y[temps]) );
+              (int) (position_boule_x*SCALE), (int) ( (window_size_y-position_boule_y*SCALE-HAUTEUR_SOL-5)-10*commande.vitesse_trajectoire_y[temps]) );
               
                drawArrow( (int) (position_boule_x*SCALE),(int) ( window_size_y-position_boule_y*SCALE-HAUTEUR_SOL-5 ),
-              (int) ( (position_boule_x*SCALE) - 10*commande.vitesse_trajectoire_x[temps] ), (int) ( window_size_y-position_boule_y*SCALE-HAUTEUR_SOL-5 ) );
-  /*
-  triangle( (position_boule_x*SCALE)+2, window_size_y-position_boule_y*SCALE-HAUTEUR_SOL, 
+              (int) ( (position_boule_x*SCALE) + 10*commande.vitesse_trajectoire_x[temps] ), (int) ( window_size_y-position_boule_y*SCALE-HAUTEUR_SOL-5 ) );
+  
+/* triangle( (position_boule_x*SCALE)+2, window_size_y-position_boule_y*SCALE-HAUTEUR_SOL, 
   (position_boule_x*SCALE)-2, window_size_y-position_boule_y*SCALE-HAUTEUR_SOL, 
 
   (position_boule_x*SCALE) - commande.vitesse_trajectoire_x[temps], 
@@ -170,7 +218,7 @@ void draw_cochonnet()
   stroke(0, 0, 0);  // Couleur du trait
   strokeWeight(2);
   fill(255, 51, 51);
-  ellipse(position_cochonnet, window_size_y-HAUTEUR_SOL-4, 8, 8);
+  ellipse(position_cochonnet*SCALE, window_size_y-HAUTEUR_SOL-4, 8, 8);
 }
 
 
@@ -215,19 +263,35 @@ void draw_texts()
     textSize(15);
     textAlign(CENTER, CENTER);
     fill(0, 0, 0);
-    text("X:" + nf(position_boule_x, 1, 2) + "          Y:" + nf(position_boule_y, 1, 2), 350, 20); 
+    text("X: " + nf(position_boule_x, 1, 2), 750,30);
+    text("Y: " + nf(position_boule_y, 1, 2), 750, 50); 
+    
+    text("Vx: " + nf(commande.vitesse_trajectoire_x[temps], 1, 2), 670,30);
+    text("Vy: " + nf(commande.vitesse_trajectoire_y[temps], 1, 2), 670, 50); 
+    
+    
 
-
+    fill(0,0,0);
+    textAlign(LEFT);
     textSize(15);
-    textAlign(CENTER, CENTER);
-    fill(0, 0, 0);
-    text("Force: " + nf(player_force, 1, 1) + " m/s\nAngle: " + int(player_angle_dattaque) + "°", 500, 20); 
+    text("Temps:" + int(temps) + " périodes", 410, 60);
+    text("Strengh : " + nf(player_force, 1, 1) + "m/s",20 , 100);
+    text("Angle    : " + int(player_angle_dattaque) + "°", 20, 120); 
+    text("Balls: " + int(lancers_restants), 20, 140); 
+    
+    
+    
+    
+    textAlign(LEFT);
+    fill(20, 20, 51);
+    
+    textSize(20);
+        if(CHEAT_MODE) text("Boucle Ouverte", 410, 35); 
+    else  text("Commande Manuelle", 410, 30); 
+    
 
 
-    textSize(15);
-    fill(255, 255, 255);
-    textAlign(LEFT, CENTER);
-    text("Controle de la force: GAUCHE-DROITE " + "\nControle de l'angle: HAUT-BAS", 10, 420);
+
   } else
   {
     textSize(15);
@@ -235,5 +299,11 @@ void draw_texts()
     text("ERROR draw_texts()", 400, 20); 
     fill(0, 0, 0);
   }
+}
+
+
+void draw_legende()
+{
+  image(legende_img, 0, 0);
 }
 

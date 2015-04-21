@@ -73,6 +73,11 @@ void keyPressed() {
       if (player_force > 10) player_force = 10; // Limite
       play_roll_fx();
     }
+    else if (key == 'c')
+    {
+      if (CHEAT_MODE) CHEAT_MODE = false;
+      else CHEAT_MODE = true;
+    }
 
     if (key == ' ') // Lancer la boule
     {
@@ -80,8 +85,9 @@ void keyPressed() {
       commande.set_conditions_initiales(player_force, player_angle_dattaque);
       commande.compute_trajectoire();
       
-      commande.compute_cheatmode(); 
-      CHEAT_MODE = true;
+      if(CHEAT_MODE) commande.compute_cheatmode();
+     // commande.compute_cheatmode(); 
+     
       
       
       GAME_STATE = LANCER_BOULE;

@@ -1,7 +1,7 @@
 /* Données de fenêtre et d'affichage 
-  * 18/03/2015
-  * Maxime Touroute
-*/
+ * 18/03/2015
+ * Maxime Touroute
+ */
 
 
 // Taille de la fenêtre
@@ -11,3 +11,4 @@ int framerate = 30;
 
 // Valeur d'échelle pour la conversion repère réel - repère fenêtre
 int SCALE = 100;
+

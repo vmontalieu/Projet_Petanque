@@ -10,6 +10,7 @@ void setup_game()
   setup_sound();
   play_music(); 
   temps = 0;
+  menu_img = loadImage("menu.png");
   GAME_STATE = START_MENU;
 }
 
@@ -19,13 +20,25 @@ void setup_game()
 void init_game() {
   // Chargement du background
   background_img = loadImage("Background.jpg");
-
+  legende_img = loadImage("tableau_de_bord.png");
+  
 
   temps = 0;
 
   // On réinitialise pas les paramètres du joueur (force et angle d'attaque)
   score = 0;
-  init_cochonnet();
+  
+  
+  
+  if(lancers_restants == 0)
+  {
+    
+    init_cochonnet();
+    lancers_restants = nombre_lancers;
+  }
+  lancers_restants--;
+    
+    
   init_boule();
 
   GAME_STATE = INIT_LANCER; // On enchaine sur l'init lancer
@@ -49,7 +62,9 @@ void init_boule()
 
 void init_cochonnet()
 {
-  position_cochonnet = int(random( window_size_x/5, window_size_x - window_size_x/5));
+  position_cochonnet = random( 1, 7);
+  
+  
 }
 
 void update_game()
@@ -90,11 +105,15 @@ void update_game()
       //TODO: interpollation à faire ici ?
 
       // Update the score
-      score =  int(100* (1 - ( abs(position_cochonnet - position_boule_x*SCALE)/window_size_x ))); //TODO: buggé
+      float distance_max = 7;
+      float distance = abs(position_cochonnet/SCALE - position_boule_x);
+
+      float score =  100*((distance/distance_max));
+      print(score + "\n");
+     // score =  int(100* (8 - ( abs(position_cochonnet - position_boule_x )))); 
       play_score_fx();
 
       draw_game(); // Dessine une dernière fois la scène
-      // Todo: remplacer par un dessin final de scene
       
       GAME_STATE = END_GAME;
     }

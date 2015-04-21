@@ -237,16 +237,16 @@ class Commande
     // Le vecteur à atteindre en fin de parcours
     float[][] Xh = {
       {
-        5 // TODO: trouver la bonne position du cochonnet
-      }
-      , {
-        -5
+        position_cochonnet // TODO: trouver la bonne position du cochonnet
       }
       , {
         0
       }
       , {
-        -10
+        0
+      }
+      , {
+         0
       }
     };   
 

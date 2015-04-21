@@ -15,6 +15,7 @@ AudioPlayer music_player;
 AudioPlayer roll_fx_player;
 AudioPlayer score_fx_player;
 
+
 void setup_sound()
 {
   music_minim = new Minim(this);
@@ -27,8 +28,8 @@ void setup_sound()
 
 void play_music()
 {
- // music_player = music_minim.loadFile("theme_music.mp3", 1024);
- // music_player.play();
+  music_player = music_minim.loadFile("theme_music.mp3", 1024);
+  music_player.play();
 }
 
 void play_roll_fx()

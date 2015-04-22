@@ -243,7 +243,7 @@ void draw_texts()
     fill(0, 0, 0);
     textAlign(LEFT);
     textSize(15);
-    text("Temps:" + int(temps) + " périodes", 410, 60);
+    text("Time:" + int(temps) + " periods", 410, 60);
     text("Balls      :", 20, 100); 
     text("Strengh : " + nf(player_force, 1, 1) + "m/s", 20, 120);
     text("Angle    : " + int(player_angle_dattaque) + "°", 20, 140); 

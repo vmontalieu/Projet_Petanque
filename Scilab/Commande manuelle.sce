@@ -46,7 +46,7 @@ Xsuivant = X0;
 
 t = 0; // compteur de temps
 
-// On aura au final dans X toute la trajectoire de LunarLander
+// On aura au final dans X toute la trajectoire de la boule de pétanque
 while Xsuivant(3) > 0 // Tant que la position en y est supérieure à 0 (pas encore par terre)
                                  // vecteur a
     Xsuivant = Ad*Xsuivant + Bd*[0;-gterre];
@@ -57,7 +57,7 @@ end
 
 xn = X(1,:);
 yn = X(3,:);
-
+// Affichage de la trajectoire
 plot2d(xn, yn, style=[color("red")]);
 
 

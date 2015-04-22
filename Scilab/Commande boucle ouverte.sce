@@ -1,4 +1,4 @@
-// Projet Petanque - Commande à retour d'etat
+// Projet Petanque - Commande à boucle ouverte
 // Maxime Touroute
 // Nicolas Sintes
 // Vincent Montalieu
@@ -48,7 +48,7 @@ Xsuivant = X0;
 
 t = 0; // compteur de temps
 
-// On aura au final dans X toute la trajectoire de LunarLander
+// On aura au final dans X toute la trajectoire normale de la boule de petanque
 while Xsuivant(3) > 0 // Tant que la position en y est supérieure à 0 (pas encore par terre)
                                  // vecteur a
     Xsuivant = Ad*Xsuivant + Bd*[0;-gterre];
@@ -59,13 +59,14 @@ end
 
 xn = X(1,:);
 yn = X(3,:);
+
+// On affiche la trajectoire manuelle en rouge
 plot2d(xn, yn, style=[color("red")]);
 
-/////////////////////////////////////////////////////// Gouvernabilité.
+/////////////////////////////////////////////////////// Boucle ouverte.
 
-// Point qu'on veut atteindre
+// Le Point qu'on veut atteindre
 // x , vx , y , vy
-//Xh  = [20;v0x;0;-10];
 Xh = [20;0;0;0];
 
 // le choix du nombre de périodes d'échantillonnage
@@ -80,19 +81,16 @@ for k=1:h-1
     end
 
 // On a l'équiation y = G*U // G 4x300, U 300x1.
-// U c'est la liste des commandes qu'on applique successivement à l'entrée de la boule de pétanque
-// Il faut trouver U
+// U est la liste des commandes qu'on applique successivement à l'entrée de la boule de pétanque
 
-    // Calcul de la solution
-    y = Xh - (Ad^h) * X0; 
-    Gt = G'; // G' donne la transposée de G
-    u = (Gt * inv(G * Gt)) * y; 
-    // Size(G*Gt) renvoit 4x4
-
+// Calcul de la solution
+y = Xh - (Ad^h) * X0; 
+Gt = G'; // G' donne la transposée de G
+u = (Gt * inv(G * Gt)) * y; 
+// Size(G*Gt) renvoit 4x4
 
 
-
-X = []; //
+X = [];
 X = X0; // conditions initiales.
 
 Xsuivant = [];
@@ -110,4 +108,5 @@ end
 xn2 = X(1,:);
 yn2 = X(3,:);
 
+// On affiche la trajectoire boucle ouverte en vert
 plot2d(xn2, yn2,style=[color("green")]);

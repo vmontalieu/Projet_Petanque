@@ -21,8 +21,9 @@ void draw_menu()
 
   if (compteur_dessin % int(framerate/3) == 0) seconde++;
 
-  background(200+cl*100, 200+cl*80, 200+cl*10);
+  background(220+cl*100, 200+cl*80, 200+cl*10);
 
+  image(menu_background,0,0);
   image(menu_img, 0, 0);
 
   if (seconde % 2 == 0) image(menu_x, 0, 0);

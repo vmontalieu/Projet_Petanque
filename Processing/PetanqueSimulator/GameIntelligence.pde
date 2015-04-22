@@ -16,6 +16,7 @@ void setup_game()
   temps = 0;
   menu_img = loadImage("menu.png");
   menu_x = loadImage("menu_x.png");
+  menu_background = loadImage("menu_background.png");
   GAME_STATE = START_MENU;
 }
 

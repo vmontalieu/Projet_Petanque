@@ -35,6 +35,8 @@ PImage background_img;
 PImage legende_img;
 PImage menu_img;
 PImage menu_x;
+PImage menu_background;
+
 
 int temps=0;
 

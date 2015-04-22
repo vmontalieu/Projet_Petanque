@@ -82,7 +82,7 @@ void draw_game()
     textSize(60);
     textAlign(CENTER, CENTER);
 
-    if (position_boule_x*SCALE < window_size_x)
+    if (position_boule_x*SCALE < window_size_x+10)
     {
       text("SCORE:" + int(score) + "%", 400, 120);
     } else

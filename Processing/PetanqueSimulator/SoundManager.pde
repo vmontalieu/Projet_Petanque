@@ -37,7 +37,7 @@ void play_score_fx()
 {
   // Son différent selon le score
   if(CHEAT_MODE) score_fx_player = music_minim.loadFile("fx_score_cheat.mp3", 1024);
-  else if (position_boule_x*SCALE > window_size_x) score_fx_player = music_minim.loadFile("fx_score_outofbounds.mp3", 1024);
+  else if (position_boule_x*SCALE > window_size_x+10) score_fx_player = music_minim.loadFile("fx_score_outofbounds.mp3", 1024);
   else if (score < 65)
     score_fx_player = music_minim.loadFile("fx_score_1.mp3", 1024);
   else if (score < 95)

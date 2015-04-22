@@ -129,8 +129,19 @@ void draw_trajectoire_triche()
   // On fait ici attention de ne pas deborder sur la fin de trajectoire
   for (int i = 0; i < temps && i < commande.instant_fin_commande_triche; i++)
   {
-    // Dessin de la ligne
-    stroke(10, 214, 0);  // Couleur du trait
+
+    if(commande.coordonnees_trajectoire_y_triche[i] < 0 && commande.coordonnees_trajectoire_y_triche[i+1] < 0) 
+    {
+      stroke(51,24,0,170);
+      strokeWeight(15);
+          line(commande.coordonnees_trajectoire_x_triche[i]*SCALE, 
+          window_size_y-commande.coordonnees_trajectoire_y_triche[i]*SCALE-HAUTEUR_SOL, 
+          commande.coordonnees_trajectoire_x_triche[i+1]*SCALE, 
+          window_size_y-commande.coordonnees_trajectoire_y_triche[i+1]*SCALE-HAUTEUR_SOL); 
+    }
+        // Dessin de la ligne
+    stroke(10, 214, 0,255);  // Couleur du trait
+    
     strokeWeight( 2 ); //Epaisseur du trait
     line(commande.coordonnees_trajectoire_x_triche[i]*SCALE, 
     window_size_y-commande.coordonnees_trajectoire_y_triche[i]*SCALE-HAUTEUR_SOL, 
@@ -230,20 +241,20 @@ void draw_texts()
   if (GAME_STATE == LANCER_BOULE || GAME_STATE == END_GAME || GAME_STATE == INIT_LANCER)
   {
     textSize(15);
-    textAlign(CENTER, CENTER);
+    textAlign(LEFT, CENTER);
     fill(0, 0, 0);
-    text("X: " + nf(position_boule_x, 1, 2), 750, 30);
-    text("Y: " + nf(position_boule_y, 1, 2), 750, 50); 
+    text("X: " + nf(position_boule_x, 1, 2), 720, 30);
+    text("Y: " + nf(position_boule_y, 1, 2), 720, 50); 
 
-    text("Vx: " + nf(commande.vitesse_trajectoire_x[temps], 1, 2), 670, 30);
-    text("Vy: " + nf(commande.vitesse_trajectoire_y[temps], 1, 2), 670, 50); 
+    text("Vx: " + nf(commande.vitesse_trajectoire_x[temps], 1, 2), 630, 30);
+    text("Vy: " + nf(commande.vitesse_trajectoire_y[temps], 1, 2), 630, 50); 
 
 
 
     fill(0, 0, 0);
     textAlign(LEFT);
     textSize(15);
-    text("Time:" + int(temps) + " periods", 410, 60);
+    text("Time:" + int(temps) + " periods", 410, 65);
     text("Balls      :", 20, 100); 
     text("Strengh : " + nf(player_force, 1, 1) + "m/s", 20, 120);
     text("Angle    : " + int(player_angle_dattaque) + "°", 20, 140); 
@@ -259,8 +270,8 @@ void draw_texts()
     fill(20, 20, 51);
 
     textSize(20);
-    if (CHEAT_MODE) text("Boucle Ouverte", 410, 35); 
-    else  text("Commande Manuelle", 410, 30);
+    if (CHEAT_MODE) text("Open Loop", 410, 35); 
+    else  text("Manual", 410, 35);
   } else
   {
     textSize(15);

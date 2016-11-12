@@ -6,15 +6,13 @@ Physic calculations has been made through scilab first, then used for the 2D Gam
 
 # How does it look
 
-Your goal is to throw the gray ball and hit the small red ball on the ground.
-
 ## The start screen
 
 ![](https://github.com/VincentMontalieu/Projet_Petanque/blob/master/readme_imgs/1.jpg)
 
 ## In game
 
-When playing in normal mode, the game uses manual command to estimate where the ball will land. Your trajectory is shown in red.
+Your goal is to throw the gray ball and hit the small red ball on the ground. When playing in normal mode, the game uses manual command to estimate where the ball will land. Your trajectory is shown in red.
 
 ![](https://github.com/VincentMontalieu/Projet_Petanque/blob/master/readme_imgs/2.jpg)
 ![](https://github.com/VincentMontalieu/Projet_Petanque/blob/master/readme_imgs/3.jpg)
